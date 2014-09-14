@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>SDP 协议分析 - 博水 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=iQQnf2q8V83bi9LbN6IvkHJyxj8GLI9A8HLPvxO-IBQ1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="http://common.cnblogs.com/Skins/SimpleBlue/style.css?id=20140415"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/qingquan/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/qingquan/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/qingquan/wlwmanifest.xml"/>
+<script src="http://common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'qingquan', cb_enable_mathjax=false;</script>
+<script src="/bundles/blog-common.js?v=15gzXd7pJ_PNpSlGpVykf0EBaNg79HWL7oD5vVw0NGA1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+		
+<!--done-->
+<div class="title"><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/qingquan/">博水</a></div>
+<div class="subtitle">专注于移动终端开发</div>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li id="nav_sitehome"><a id="MyLinks1_HomeLink" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li id="nav_myhome"><a id="MyLinks1_MyHomeLink" class="menu" href="http://www.cnblogs.com/qingquan/">首页</a></li>
+<li id="nav_q"><a class="menu" href="http://q.cnblogs.com/">博问</a></li>
+<li id="nav_ing"><a class="menu" href="http://home.cnblogs.com/ing/">闪存</a></li>
+<li id="nav_newpost"><a id="MyLinks1_NewPostLink" class="menu" rel="nofollow" href="http://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li id="nav_contact"><a id="MyLinks1_ContactLink" class="menu" rel="nofollow" href="http://space.cnblogs.com/msg/send/%e5%8d%9a%e6%b0%b4">联系</a></li>
+<li id="nav_rss"><a id="MyLinks1_Syndication" class="menu" href="http://www.cnblogs.com/qingquan/rss">订阅</a>
+<!--<a id="MyLinks1_XMLLink" class="aHeaderXML" href="http://www.cnblogs.com/qingquan/rss"><img src="http://www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li id="nav_admin"><a id="MyLinks1_Admin" class="menu" rel="nofollow" href="http://i.cnblogs.com/">管理</a></li>
+</ul>
+
+		<div class="blogStats">
+			
+			
+<!--done-->
+随笔-25&nbsp;
+文章-0&nbsp;
+评论-60&nbsp;
+
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/qingquan/archive/2011/08/02/2125585.html">SDP 协议分析</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><h4>一、SDP协议介绍</h4>
+<p>SDP 完全是一种会话描述格式 ― 它不属于传输协议 ― 它只使用不同的适当的传输协议，包括会话通知协议（SAP）、会话初始协议（SIP）、<a href="http://www.cnblogs.com/qingquan/archive/2011/07/14/2106834.html" target="_blank">实时流协议（RTSP）、</a>MIME 扩展协议的电子邮件以及超文本传输协议（HTTP）。SDP协议是也是基于文本的协议，这样就能保证协议的可扩展性比较强，这样就使其具有广泛的应用范围。SDP 不支持会话内容或媒体编码的协商，所以在流媒体中只用来描述媒体信息。媒体协商这一块要用<a href="http://www.cnblogs.com/qingquan/archive/2011/07/14/2106834.html" target="_blank">RTSP</a>来实现．</p>
+<h4>二、SDP协议格式</h4>
+<p>SDP描述由许多文本行组成，文本行的格式为&lt;类型&gt;=&lt;值&gt;，&lt;类型&gt;是一个字母，&lt;值&gt;是结构化的文本串，其格式依&lt;类型&gt;而定。</p>
+<p>＜type＞=&lt;value&gt;[CRLF]</p>
+<p>常见的fields有：</p>
+<p><a href="http://images.cnblogs.com/cnblogs_com/qingquan/201108/201108022241471860.jpg"><img style="display: inline; border-width: 0px;" title="table1" alt="table1" src="http://images.cnblogs.com/cnblogs_com/qingquan/201108/201108022241526065.jpg" border="0" height="433" width="728" /></a></p>
+<p><a href="http://images.cnblogs.com/cnblogs_com/qingquan/201108/201108022241525476.jpg"><img style="display: inline; border-width: 0px;" title="tabl2" alt="tabl2" src="http://images.cnblogs.com/cnblogs_com/qingquan/201108/20110802224153393.jpg" border="0" height="164" width="731" /></a></p>
+<p><a href="http://images.cnblogs.com/cnblogs_com/qingquan/201108/201108022241543359.jpg"><img style="display: inline; border-width: 0px;" title="tabl3" alt="tabl3" src="http://images.cnblogs.com/cnblogs_com/qingquan/201108/201108022241541657.jpg" border="0" height="278" width="734" /></a></p>
+<h4>三、SDP协议例子：</h4>
+<p>下面是一个helix 流媒体服务器的RTSP协议中的SDP协议：</p>
+<p>v=0 //SDP version</p>
+<p>// o field定义的源的一些信息。其格式为：o=&lt;username&gt; &lt;sess-id&gt; &lt;sess-version&gt; &lt;nettype&gt; &lt;addrtype&gt; &lt;unicast-address&gt;</p>
+<p>o=- 1271659412 1271659412 IN IP4 10.56.136.37 s=&lt;No title&gt;</p>
+<p>i=&lt;No author&gt; &lt;No copyright&gt;&nbsp; //session的信息</p>
+<p>c=IN IP4 0.0.0.0 //connect 的信息，分别描述了：网络协议，地址的类型，连接地址。</p>
+<p>c=IN IP4 0.0.0.0</p>
+<p>t=0 0 //时间信息，分别表示开始的时间和结束的时间，一般在流媒体的直播的时移中见的比较多。</p>
+<p>a=SdpplinVersion:1610641560 //描述性的信息</p>
+<p>a=StreamCount:integer;2 //用来描述媒体流的信息，表示有两个媒体流。integer表示信息的格式为整数。</p>
+<p>a=control:*</p>
+<p>a=DefaultLicenseValue:integer;0 //License信息</p>
+<p>a=FileType:string;"MPEG4" ////用来描述媒体流的信息说明当前协商的文件是mpeg4格式的文件</p>
+<p>a=LicenseKey:string;"license.Summary.Datatypes.RealMPEG4.Enabled"</p>
+<p>a=range:npt=0-72.080000&nbsp; //用来表示媒体流的长度</p>
+<p>m=audio 0 <a href="http://www.cnblogs.com/qingquan/archive/2011/07/28/2120440.html" target="_blank">RTP</a>/AVP 96 //做为媒体描述信息的重要组成部分描述了媒体信息的详细内容：表示session的audio是通过<a href="http://www.cnblogs.com/qingquan/archive/2011/07/28/2120440.html" target="_blank">RTP</a>来格式传送的，其payload值为96传送的端口还没有定。</p>
+<p>b=as:24 //audio 的bitrate</p>
+<p>b=RR:1800</p>
+<p>b=RS:600</p>
+<p>a=control:streamid=1&nbsp; //通过媒体流1来发送音频</p>
+<p>a=range:npt=0-72.080000 //说明媒体流的长度。</p>
+<p>a=length:npt=72.080000</p>
+<p>a=rtpmap:96 MPEG4-GENERIC/32000/2 //rtpmap的信息，表示音频为AAC的其sample为32000</p>
+<p>a=fmtp:96 profile-level-id=15;mode=AAC-hbr;sizelength=13;indexlength=3;indexdeltalength=3;config=1210 //config为AAC的详细格式信息</p>
+<p>a=mimetype:string;"audio/MPEG4-GENERIC"</p>
+<p>a=Helix-Adaptation-Support:1</p>
+<p>a=AvgBitRate:integer;48000</p>
+<p>a=HasOutOfOrderTS:integer;1</p>
+<p>a=MaxBitRate:integer;48000</p>
+<p>a=Preroll:integer;1000</p>
+<p>a=OpaqueData:buffer;"A4CAgCIAAAAEgICAFEAVABgAAAC7gAAAu4AFgICAAhKIBoCAgAEC"</p>
+<p>a=StreamName:string;"Audio Track"</p>
+<p>下面是video的信息基本和audio的信息相对称，这里就不再说了。</p>
+<p>m=video 0 <a href="http://www.cnblogs.com/qingquan/archive/2011/07/28/2120440.html" target="_blank">RTP</a>/AVP 97</p>
+<p>b=as:150</p>
+<p>b=RR:11250</p>
+<p>b=RS:3750</p>
+<p>a=control:streamid=2</p>
+<p>a=range:npt=0-72.080000</p>
+<p>a=length:npt=72.080000</p>
+<p>a=rtpmap:97 MP4V-ES/2500</p>
+<p>a=fmtp:97 profile-level-id=1;</p>
+<p>a=mimetype:string;"video/MP4V-ES"</p>
+<p>a=Helix-Adaptation-Support:1</p>
+<p>a=AvgBitRate:integer;300000</p>
+<p>a=HasOutOfOrderTS:integer;1</p>
+<p>a=Height:integer;240 //影片的长度</p>
+<p>a=MaxBitRate:integer;300000</p>
+<p>a=MaxPacketSize:integer;1400</p>
+<p>a=Preroll:integer;1000</p>
+<p>a=Width:integer;320&nbsp; //影片的宽度</p>
+<p>a=OpaqueData:buffer;"AzcAAB8ELyARAbd0AAST4AAEk+AFIAAAAbDzAAABtQ7gQMDPAAABAAAAASAAhED6KFAg8KIfBgEC"</p>
+<p>a=StreamName:string;"Video Track"</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+		</div>
+		<div class = "postDesc">posted @ <span id="post-date">2011-08-02 22:42</span> <a href='http://www.cnblogs.com/qingquan/'>博水</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="http://i.cnblogs.com/EditPosts.aspx?postid=2125585" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(2125585);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,isLogined=false,cb_blogId=76864,cb_entryId=2125585,cb_blogApp=currentBlogApp,cb_blogUserGuid='c2c61021-1bd4-df11-ac81-842b2b196315',cb_entryCreatedDate='2011/8/2 22:42:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+<a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" id="lnk_RefreshComments" onclick="return RefreshCommentList();">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+<div id="comment_form_container"></div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="site_nav_under"><a href="http://www.cnblogs.com/" target="_blank" title="程序员的网上家园">博客园首页</a><a href="http://q.cnblogs.com/" target="_blank" title="程序员问答社区">博问</a><a href="http://news.cnblogs.com/" target="_blank" title="IT新闻">新闻</a><a href="http://home.cnblogs.com/ing/" target="_blank">闪存</a><a href="http://job.cnblogs.com/" target="_blank">程序员招聘</a><a href="http://kb.cnblogs.com/" target="_blank">知识库</a></div>
+<div id="ad_under_post_holder"></div>
+<script type="text/javascript">
+var enableGoogleAd = true;
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+fixPostBodyFormat();
+loadAdUnderPost();
+</script>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+loadBlogSignature();
+LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+</script>
+<script type="text/javascript">
+    $.ajax({ url: 'http://counter.cnblogs.com/blog/post/' + cb_entryId, type: 'get', dataType: 'script', cache: true });
+</script>
+</div>
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright &copy;2014 博水
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+</body>
+</html>

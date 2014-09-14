@@ -1,0 +1,727 @@
+<!DOCTYPE HTML>
+<!--
+ ______________ 
+< TUICOOL.COM >
+ -------------- 
+        \   ^__^
+         \  (**)\__$__$__
+            (__)\       )\/\
+             U  ||------|
+                ||     ||
+-->
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="authenticity_token" name="csrf-param" />
+<meta content="2eZa1+zZ6aAd8awYOOPQ4m99l9spITECSwIe9BRiG5o=" name="csrf-token" />
+    <title>Live555接收h264使用ffmpeg解码为YUV420 - 推酷</title>
+    <meta name="description" content="Live555接收h264使用ffmpeg解码为YUV420"/>
+
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  
+  <link href="/assets/application-4925e98c3c1dd4735014625df846c041.css" media="all" rel="stylesheet" type="text/css" />
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+
+  <script src="/assets/application-75df9a04668a9409548ec6b32e84f01d.js" type="text/javascript"></script>
+  <script src="/assets/bootstrap-popover-851b0f56937743d00ab0112fdc4047f0.js" type="text/javascript"></script>
+
+  <!--[if IE 7]>
+  <link rel="stylesheet" href="/assets/font-awesome-ie7.min.css">
+  <![endif]--> 
+
+    <script src="/assets/tip-405762ee91c557443304e044d7a80e57.js" type="text/javascript"></script>
+
+    
+ 	<link href="/assets/art_zoom-48eda4c0f1a722be6edc5f6d8bc65a9b.css" media="screen" rel="stylesheet" type="text/css" />
+<script src="/assets/weibo-7585d869cd63846c6f174a8c58396405.js" type="text/javascript"></script>
+
+
+</head>
+<body>
+  
+  <div id="header" class="navbar-fixed-top">
+    <div class="container">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> 
+            <span class="icon-bar"></span> 
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span> 
+          </a>
+          <a href="/" class="brand">推酷</a>        
+		      <nav class="nav-collapse collapse">
+            <ul class="nav navbar primary-nav">                            
+              <li class="">
+                <a href="/ah">
+                  文章
+                </a>
+              </li>              
+              <li class="">
+                <a href="/topics">
+                  主题
+                </a>
+              </li>
+              <li class="">
+				<a href="/sites/hot">
+                  站点
+                </a>
+              </li>
+              <li class="">
+                <a href="/huodong">
+                  活动
+                </a>
+              </li>
+              <li class="">
+                <a href="/mobile">
+                  客户端
+                </a>
+              </li>
+              <li class="dropdown  ">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">周刊 <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/mags">编程狂人</a></li>
+                  <li><a href="/mags/design">设计匠艺</a></li>                  
+                </ul>
+              </li>
+			  
+			   <li class="dropdown  ">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">更多 <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="/t">
+                        微博推荐
+                    </a>
+                    </li>
+				  <li><a href="/jobs">内推招聘</a></li>       
+                  <li><a href="/bbs">讨论区</a></li>                  
+                </ul>
+              </li>
+			  
+	          </ul>
+            <form class="navbar-search pull-left" action="/topics/search">
+              <input type="text" class="search-query span2" name="kw" placeholder="搜索主题">
+            </form>
+            <ul class="nav pull-right">
+                <li><a href="/login">登录</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+	   </div>	
+	</div>
+  <div id ="flash_container" class="noPrint">    
+    <!-- <a href='#'' class='close' data-dismiss='alert'>×</a> -->
+  </div>
+    
+<div class="container-fluid">  
+  <!-- body start-->
+  <script src="/assets/spin-e9abeea86a7144c7709122728dc4612e.min" type="text/javascript"></script>
+<link rel="stylesheet" href="/assets/prettify/github.css">
+<div class="row-fluid">
+    <!--show start-->
+    <div class="span8 contant">
+        <h1>Live555接收h264使用ffmpeg解码为YUV420</h1>
+        <div class="article_meta">
+            <span class="timestamp">时间2014-02-16 12:57:43
+            </span>
+            <span class="from"><i class="icon-globe"></i><a class="cut cut28 from" href="/sites/vQZRB3" target="_blank">CSDN博客
+                </a></span>
+            <span id="dup-cnt"><a href="/articles/dup?id=rmQ732" target="_blank">相似文章</a> (<i id="dup">0</i>)</span>
+            <span class="pdf">            </span>
+            <span class="source" style="display:block;"><i style="float:left;">原文</i>&nbsp; 
+                <a class="cut cut70" href="http://blog.csdn.net/gubenpeiyuan/article/details/19072223" style="display:inline-block;">http://blog.csdn.net/gubenpeiyuan/article/details/19072223</a>
+            </span>
+            <a href="#add-article-to-kan" id="add-article-to-kan-btn" class="btn" data-toggle="modal" style="display:none;">添加到推刊</a>
+            <!-- add_article to kan -->
+<div id="add-article-to-kan" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <span class="add-title">收藏到推刊</span>
+    <a href="#new-kan" class="btn pull-right" data-toggle="modal">创建推刊</a>
+    <i class="clearfix"></i>
+  </div>
+  <div class="modal-body">
+    <ul id="add-kan-list">
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <input type="hidden" value="rmQ732" class="article-id" /> 
+    <button class="btn btn-primary pull-left add-to-btn">  收 藏  </button>
+    <button class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+  </div>
+</div>
+<div class="add-article-to-kan-alert">
+  已收藏到推刊！
+</div>
+
+            <div id="new-kan" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!--
+    <a href="new-kan" class="btn" data-toggle="modal">创建推刊</a>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Modal header</h3>
+  </div>
+-->
+  <div class="modal-body">
+    <input type="text" name="name" id="new-kan-name"  placeholder="推刊名(必填)" required data-validation-required-message="请填写推刊名" />
+    <span class="new-ness-name">请填写推刊名</span>
+    <br/>
+    <textarea name="desc" id="desc" rows="6" placeholder="推刊描述"></textarea>
+    <span class="new-ness-desc">描述不能大于100个字符!</span>
+    <br/>
+    权限设置：<input type="radio" name="type" value="1" checked="checked" /> 公开
+    <input type="radio" name="type" value="0"> 仅自己可见
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary pull-left create-kan-btn" disabled>创建</button>
+    <button class="btn dismiss-new-kan" data-dismiss="modal" aria-hidden="true">取消</button>
+  </div>
+</div>
+
+
+        </div>
+        <div class="article_body" id="nei">
+            <div>
+  <h2>本文概要：</h2>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 本文介绍了一种常用成熟的多媒体解码方案。使用live555作为流媒体数据源，建立rtsp会话请求h264数据流。后端使用ffmpeg解码h264流并保存为yuv420格式。</p>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 该方案比较成熟，可行性高，但网络相关资料较少，给初学者带来了不小的入门难度。本文介绍了其中实现的几个关键步骤和容易出现错误的地方。希望能给从事该方向开发的朋友有一些启示。本文使用的开发环境Ubuntu12.04.。转载请注明出处 CSDN--固本培元。</p>
+  <h2>Live555介绍：</h2>
+  <p>
+    <span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Live555 是一个为</span>
+    <a target="_blank" href="http://baike.baidu.com/view/794.htm" rel="nofollow,noindex">流媒体</a>
+    <span>提供解决方案的跨平台的C++开源项目，它实现了对标准流媒体</span>
+    <a target="_blank" href="http://baike.baidu.com/view/441895.htm" rel="nofollow,noindex">传输协议</a>
+    <span>如RTP/RTCP、RTSP、SIP等的支持。Live555实现了对多种音视频编码格式的音视频数据的流化、接收和处理等支持，包括MPEG、H.263+、DV、JPEG视频和多种音频编码。</span>
+    <br/>
+  </p>
+  <h2>ffmpeg介绍：</h2>
+  <p>
+    <span>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; FFmpeg是一个开源免费跨平台的视频和</span>
+    <a target="_blank" href="http://baike.baidu.com/view/1141389.htm" rel="nofollow,noindex">音频流</a>
+    <span>方案，属于自由</span>
+    <a target="_blank" href="http://baike.baidu.com/view/37.htm" rel="nofollow,noindex">软件</a>
+    <span>，采用LGPL或GPL许可证（依据你选择的组件）。它提供了录制、转换以及流化音视频的完整解决方案。它包含了非常先进的音频/视频编解码库libavcodec，为了保证高可移植性和编解码质量，libavcodec里很多codec都是从头开发的。</span>
+    <br/>
+  </p>
+  <h2>方案说明：</h2>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 有朋友说，ffmpeg也具有rtsp、rtp相关的支持，为何要使用live555作为rtsp会话来传输数据呢？原因如下。</p>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ffmpeg对rtsp、rtp的支持相对于live555的支持较弱。一个明显的例子:对于用户的验证。live555有十分简易的接口。而ffmpeg需要更加ffserver进行修改rtsp的请求。同时，ffmpeg代码风格使用c风格，单文件长度大。更改虽然是可行的，但需要使用较长的时间。个人不建议这样，毕竟有的时候可以走捷径，我们就快点提高效率吧。</p>
+  <h2>开始：</h2>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 废话不多说了，我们开始。</p>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;首先工程中src目录结构如下：</p>
+  <p>
+    <img src="http://img0.tuicool.com/7JnE3u.jpg" alt="" />
+    <br/>
+  </p>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 目录包括，h264解码，live555客户端，SDL、Ui。本文介绍h264和live555client部分。</p>
+  <h2>Live555客户端</h2>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 在编译完成live555之后会产生很多例程。其中便有客户端的改写例程。本文使用了testRTSPClient.cpp 例程进行改写。</p>
+  <p>
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;live555的官方文档中有记录：    <a target="_blank" href="http://www.live555.com/liveMedia/#testProgs" rel="nofollow,noindex">http://www.live555.com/liveMedia/#testProgs</a>
+  </p>
+  <pre class="prettyprint">RTSP client
+
+testRTSPClient is a command-line program that shows you how to open and receive media streams that are specified by a RTSP URL - i.e., an URL that begins with rtsp://
+In this demonstration application, nothing is done with the received audio/video data. You could, however, use and adapt this code in your own application to (for example) decode and play the received data.</pre>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 该例程专用于接收rtsp会话数据流，用于修改十分方便。  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 当接收流用于ffmpeg解码h264时需要补偿sps以及pps位，同时如果需要保存h264流文件需要添加起始码：（live555官方常见问题记录如下）</p>
+  <pre class="prettyprint">I have successfully used the &quot;testRTSPClient&quot; demo application to receive a RTSP/RTP stream. Using this application code as a model, how can I decode the received video (and/or audio) data?
+
+The &quot;testRTSPClient&quot; demo application receives each (video and/or audio) frame into a memory buffer, but does not do anything with the frame data. You can, however, use this code as a model for a 'media player' application that decodes and renders these frames. Note, in particular, the &quot;DummySink&quot; class that the &quot;testRTSPClient&quot; demo application uses - and the (non-static) &quot;DummySink::afterGettingFrame()&quot; function. When this function is called, a complete 'frame' (for H.264, this will be a &quot;NAL unit&quot;) will have already been delivered into &quot;fReceiveBuffer&quot;. Note that our &quot;DummySink&quot; implementation doesn't actually do anything with this data; that's why it's called a 'dummy' sink.
+If you want to decode (or otherwise process) these frames, you would replace &quot;DummySink&quot; with your own &quot;MediaSink&quot; subclass. Its &quot;afterGettingFrame()&quot; function would pass the data (at &quot;fReceiveBuffer&quot;, of length &quot;frameSize&quot;) to a decoder. (A decoder would also use the &quot;presentationTime&quot; timestamp to properly time the rendering of each frame, and to synchronize audio and video.)
+
+If you are receiving H.264 video data, there is one more thing that you have to do before you start feeding frames to your decoder. H.264 streams have out-of-band configuration information (&quot;SPS&quot; and &quot;PPS&quot; NAL units) that you may need to feed to the decoder to initialize it. To get this information, call &quot;MediaSubsession::fmtp_spropparametersets()&quot; (on the video 'subsession' object). This will give you a (ASCII) character string. You can then pass this to &quot;parseSPropParameterSets()&quot; (defined in the file &quot;include/H264VideoRTPSource.hh&quot;), to generate binary NAL units for your decoder.</pre>
+  <h3>live555保存h264文件：</h3>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; live555在传输h264流时省略了起始码，若需要存储h264码流的朋友并需要能使用vlc播放加入起始码即可。</p>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 起始码：0x00&nbsp;0x00&nbsp;0x00 0x01</p>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; （注意：0x01 &nbsp;在高地址）</p>
+  <h3>ffmpeg解码h264流：</h3>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 官方文档或者大部分网络资料中均有思路的提示，但是说明不够详细。</p>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 上文live555官方文档中说到需要使用fmtp_sproparametersets()方法获得sps以及pps在base64编码后的内容，随后调用par色SPropPa让meterSets（）方法还原为二进制码，具体h264流用于ffmpeg解码流的sps以及pps位补偿的获取方式如下：</p>
+  <pre class="prettyprint">unsigned int Num=0 ;
+  unsigned int &amp;SPropRecords =Num;
+
+  SPropRecord *p_record=new SPropRecord();
+  p_record=parseSPropParameterSets(fSubsession.fmtp_spropparametersets(),SPropRecords);</pre>
+  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;获取sps位以及pps位后排列方式如下：</p>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;起始码 sps 起始码 pps 将此码流补偿给ffmpeg解码器及可以正常解码。</p>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;交流邮箱：leoluopy@gmail.com</p>
+  <h3>参考代码：</h3>
+  <p>ffmpeg解码环境初始化</p>
+  <pre class="prettyprint">void InitH264DecodeEnv()
+{
+
+	av_register_all();
+
+
+	av_init_packet(&amp;packet);
+
+	/* find the video decoder */
+	if (!(videoCodec=avcodec_find_decoder(CODEC_ID_H264))){
+	    printf(&quot;codec not found!&quot;);
+	    return ;
+	}
+	context= avcodec_alloc_context();
+
+    picture = avcodec_alloc_frame();// Allocate video frame
+
+    if (avcodec_open(context, videoCodec) &lt; 0) {
+        fprintf(stderr, &quot;could not open codec\n&quot;);
+        exit(1);
+    }
+}</pre>
+  <p>ffmpeg解码网络h264流至YUV420（YV12）</p>
+  <pre class="prettyprint">int h264_decode_from_rtsp_and_save_yuv_serial_file( char* inputbuf,int inputbuf_size,const char *outfile,
+		const char *sps,const int sps_len,const char *pps,const int pps_len)
+{
+	char Name[100]; memset(Name,0,100);
+
+	Set_CONTEXT_EXTRA(context,sps,sps_len,pps,pps_len);
+
+    packet.data = inputbuf ;
+	packet.size = inputbuf_size;
+
+	while (packet.size &gt; 0)
+	{
+		char outproperties[200];
+		printf(&quot;##		decode cost:%d		\n&quot;,len = avcodec_decode_video2(context, picture, &amp;got_picture, &amp;packet));
+		if (len &lt; 0) {
+			fprintf(stderr, &quot;Error while decoding frame %d\n&quot;, frame);
+
+			return 0;
+		}
+		if (got_picture) {
+			printf(&quot;saving frame %3d\n&quot;, frame);
+
+//			SaveOneYUVImage(got_picture,context,picture,outfile);
+
+            pgm_save(picture-&gt;data[0], picture-&gt;linesize[0], 		 //Y
+                     context-&gt;width, context-&gt;height, outfile);
+			pgm_save(picture-&gt;data[1], picture-&gt;linesize[1],
+				context-&gt;width/2, context-&gt;height/2, outfile);       //U
+			pgm_save(picture-&gt;data[2], picture-&gt;linesize[2],
+				context-&gt;width/2, context-&gt;height/2, outfile);       //V
+
+			frame++;
+
+			sprintf(outproperties,&quot;Got width:%d height:%d frame:num:%d cost:%d pic_type:%s \n&quot;,context-&gt;width,context-&gt;height,frame,len,
+					GetFrameTypeName(Name,picture-&gt;pict_type));
+			Fprint_String(outproperties,&quot;./tmp/outproperties.txt&quot;,&quot;a+&quot;);
+		}
+		else{
+			sprintf(outproperties,&quot;		NoneGot width:%d height:%d frame:num:%d cost:%d pic_type:%s \n&quot;,context-&gt;width,context-&gt;height,frame,len,
+					GetFrameTypeName(Name,picture-&gt;pict_type));
+			Fprint_String(outproperties,&quot;./tmp/outproperties.txt&quot;,&quot;a+&quot;);
+			printf(&quot;this frame no picture gained \n&quot;);
+		}
+		packet.size -= len;
+		packet.data += len;
+	}
+
+//    avcodec_close(context);
+//    av_free(context);
+//    av_free(picture);
+
+	return -1 ;
+}</pre>
+  <h2>参考文章：</h2>
+  <p>live555官网介绍的live555流解码补偿pps及sps</p>
+  <p>
+    <a target="_blank" href="http://www.live555.com/liveMedia/faq.html#testRTSPClient-how-to-decode-data" rel="nofollow,noindex">http://www.live555.com/liveMedia/faq.html#testRTSPClient-how-to-decode-data</a>
+  </p>
+  <p>live555中的nal units</p>
+  <p>
+    <a target="_blank" href="http://blog.sina.com.cn/s/blog_82065d010100wd0t.html" rel="nofollow,noindex">http://blog.sina.com.cn/s/blog_82065d010100wd0t.html</a>
+    <br/>
+  </p>
+  <p>H264标准：</p>
+  <p>
+    <a target="_blank" href="http://wenku.baidu.com/view/fd07f50590c69ec3d5bb75bf.html" rel="nofollow,noindex">http://wenku.baidu.com/view/fd07f50590c69ec3d5bb75bf.html</a>
+    <br/>
+  </p>
+  <p>pudn源码</p>
+  <p>
+    <a target="_blank" href="http://www.pudn.com/downloads290/sourcecode/windows/multimedia/detail1303846.html" rel="nofollow,noindex">http://www.pudn.com/downloads290/sourcecode/windows/multimedia/detail1303846.html</a>
+    <br/>
+  </p>
+  <p>csdn源码</p>
+  <p>
+    <a target="_blank" href="http://download.csdn.net/detail/lawishere/4382056" rel="nofollow,noindex">http://download.csdn.net/detail/lawishere/4382056</a>
+    <br/>
+  </p>
+  <p>数据帧参考：</p>
+  <p>
+    <a target="_blank" href="http://bbs.csdn.net/topics/330029802" rel="nofollow,noindex">http://bbs.csdn.net/topics/330029802</a>
+    <br/>
+  </p>
+  <p>LIVE555播放：</p>
+  <p>
+    <a target="_blank" href="http://bbs.csdn.net/topics/330027295" rel="nofollow,noindex">http://bbs.csdn.net/topics/330027295</a>
+    <br/>
+  </p>
+  <p>H264中SPS/PPS作用和提取</p>
+  <p>
+    <a target="_blank" href="http://blog.csdn.net/sunnylgz/article/details/7680262" rel="nofollow,noindex">http://blog.csdn.net/sunnylgz/article/details/7680262</a>
+    <br/>
+  </p>
+  <p>H264的NAL技术</p>
+  <p>
+    <a target="_blank" href="http://blog.csdn.net/ericbaner/article/details/3950810" rel="nofollow,noindex">http://blog.csdn.net/ericbaner/article/details/3950810</a>
+    <br/>
+  </p>
+  <p>各种SDP协议介绍：</p>
+  <p>
+    <a target="_blank" href="http://www.cnblogs.com/qingquan/archive/2011/08/02/2125585.html" rel="nofollow,noindex">http://www.cnblogs.com/qingquan/archive/2011/08/02/2125585.html</a>
+    <br/>
+  </p>
+  <p>RTP视频流广播：</p>
+  <p>
+    <a target="_blank" href="http://blog.csdn.net/Tinnal/article/details/2871734" rel="nofollow,noindex">http://blog.csdn.net/Tinnal/article/details/2871734</a>
+    <br/>
+  </p>
+  <p>PPS问题参考：PPS 0 referenced decode_slice_header error &nbsp; 0001 sps 0001 pps</p>
+  <p>
+    <a target="_blank" href="http://blog.csdn.net/cosmoslife/article/details/7557310" rel="nofollow,noindex">http://blog.csdn.net/cosmoslife/article/details/7557310</a>
+    <br/>
+  </p>
+  <h2>
+    <a target="_blank" href="http://stackoverflow.com/questions/9618369/h-264-over-rtp-identify-sps-and-pps-frames" rel="nofollow,noindex">H.264 over RTP - Identify SPS and PPS Frames</a>
+  </h2>
+  <a target="_blank" href="http://stackoverflow.com/questions/9618369/h-264-over-rtp-identify-sps-and-pps-frames" rel="nofollow,noindex">http://stackoverflow.com/questions/9618369/h-264-over-rtp-identify-sps-and-pps-frames</a>
+  <br/>
+  <p>
+    <a target="_blank" href="http://blog.csdn.net/nogodoss/article/details/19112807" rel="nofollow,noindex">从ffmpeg源代码分析如何解决ffmpeg编码的延迟问题</a>
+    <br/>
+  </p>
+  <p>
+    <a target="_blank" href="http://blog.csdn.net/nogodoss/article/details/19112807" rel="nofollow,noindex">http://blog.csdn.net/nogodoss/article/details/19112807</a>
+    <br/>
+  </p>
+  <p>H264的码流结构：</p>
+  <p>
+    <a target="_blank" href="http://bbs.csdn.net/topics/330072707" rel="nofollow,noindex">http://bbs.csdn.net/topics/330072707</a>
+    <br/>
+  </p>
+  <h2>
+    <a target="_blank" href="http://blog.csdn.net/qingkong8832/article/details/6669731" rel="nofollow,noindex">字节流格式（Annex B）和RTP格式流浅析</a>
+  </h2>
+  <p>
+    <a target="_blank" href="http://blog.csdn.net/qingkong8832/article/details/6669731" rel="nofollow,noindex">http://blog.csdn.net/qingkong8832/article/details/6669731</a>
+    <br/>
+  </p>
+  <p>NALU详解</p>
+  <p>
+    <a target="_blank" href="http://blog.csdn.net/d_l_u_f/article/details/7260772" rel="nofollow,noindex">http://blog.csdn.net/d_l_u_f/article/details/7260772</a>
+  </p>
+  <p>
+    <a target="_blank" href="http://blog.csdn.net/gavinr/article/details/7183499" rel="nofollow,noindex">ffmpeg 从mp4上提取H264的nalu</a>
+    <br/>
+  </p>
+  <p>
+    <a target="_blank" href="http://blog.csdn.net/gavinr/article/details/7183499" rel="nofollow,noindex">http://blog.csdn.net/gavinr/article/details/7183499</a>
+    <br/>
+  </p>
+</div>
+
+        </div>
+    </div>
+    <div class="span4">
+        <div id ="related_topics" class="related_topics">
+            <h4 class="side_article_list_title">相关主题</h4>
+            <ul class="side_topic_list">
+                <li class="side_topic_list_item">
+                    <a href="/topics/11110085" target="_blank" style="text-decoration:none;"><img src="http://ttimg1.tuicool.com/11110085.png!small" alt="FFmpeg" /></a><span><a href="/topics/11110085" target="_blank">FFmpeg</a></span>
+
+                    <span><a data-id="11110085" class="btn fo-btn fo-ok" style="display:none;"><img src="/images/add.png" class="fo-img"/></a></span>
+                </li>
+            </ul>
+        </div>
+        <div class="operate_zone">
+            <h4 class="side_article_list_title">如果你感兴趣</h4>
+            <div class="article_like">
+                <button class="btn btn-large liked" id="my_like2" data_id="rmQ732">
+                    <!-- <i class="icon-thumbs-up"></i>--><i class="icon-heart-empty"></i>
+                    喜 欢
+                </button>
+                <button class="btn btn-large liked" id="my_like" data_id="rmQ732">
+                    <i class="icon-star-empty"></i>
+                    收 藏
+                </button>
+            </div>
+            <h4 class="side_article_list_title">分享该文章</h4>
+            <div class="share_zone">
+                <script type="text/javascript" charset="utf-8">
+                    (function(){
+                        var _w = 32, _h = 32;
+                        var param = {
+                            url: location.href,
+                            type: '1',
+                            count: '', /**是否显示分享数，1显示(可选)*/
+                            appkey: '', /**您申请的应用appkey,显示分享来源(可选)*/
+                            title: 'Live555接收h264使用ffmpeg解码为YUV420', /**分享的文字内容(可选，默认为所在页面的title)*/
+                            pic: '', /**分享图片的路径(可选)*/
+                            ralateUid: '2609648351', /**关联用户的UID，分享微博会@该用户(可选)*/
+                            language: 'zh_cn', /**设置语言，zh_cn|zh_tw(可选)*/
+                            rnd: new Date().valueOf()
+                        }
+                        var temp = [];
+                        for (var p in param) {
+                            temp.push(p + '=' + encodeURIComponent(param[p] || ''))
+                        }
+                        document.write('<iframe id="sina_share" allowTransparency="true" frameborder="0" scrolling="no" src="http://hits.sinajs.cn/A1/weiboshare.html?' + temp.join('&') + '" width="' + _w + '" height="' + _h + '"></iframe>')
+                    })()
+                </script>
+                <div id="qqwb_share__" data-appkey="801319615" data-icon="0" data-counter="0" data-content="Live555接收h264使用ffmpeg解码为YUV420 （分享自 @tuicool）" data-pic="http://img0.tuicool.com/vM3Yvu.jpg">
+                </div>
+                <script src="http://mat1.gtimg.com/app/openjs/openjs.js#autoboot=no&debug=no">
+                </script>
+                <a id="douban_share" target="_blank" href="http://share.baidu.com/s?type=text&amp;searchPic=0&amp;sign=on&amp;to=douban&amp;url=http://www.tuicool.com/articles/rmQ732&amp;title=Live555接收h264使用ffmpeg解码为YUV420" title="分享到豆瓣"></a>
+                <a id="qqzone_share" target="_blank" href="http://share.baidu.com/s?type=text&amp;searchPic=0&amp;sign=on&amp;to=qzone&amp;url=http://www.tuicool.com/articles/rmQ732&amp;title=Live555接收h264使用ffmpeg解码为YUV420 （分享自 @tuicool）" title="分享到QQ空间"></a>
+                <div class="pull-left btn-group">
+                    <button style="height: 32px; font-size:14px" class="btn btn-primary dropdown-toggle pull-right tohide" data-toggle="dropdown">
+                        <i class="icon icon-share-alt icon-white"></i>
+                        分享到 <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a target="_blank" href="http://s.evernote.com/grclip?url=http://www.tuicool.com/articles/rmQ732&amp;title=Live555接收h264使用ffmpeg解码为YUV420">印象笔记</a>
+                        </li>
+                        <li>
+                            <a target="_blank" href="http://share.baidu.com/s?type=text&amp;searchPic=0&amp;sign=on&amp;to=renren&amp;url=http://www.tuicool.com/articles/rmQ732&amp;title=Live555接收h264使用ffmpeg解码为YUV420" title="分享到人人网">人人网</a>
+                        </li>
+                        <li>
+                            <a target="_blank" href="http://share.baidu.com/s?type=text&amp;searchPic=0&amp;sign=on&amp;to=fbook&amp;url=http://www.tuicool.com/articles/rmQ732&amp;title=Live555接收h264使用ffmpeg解码为YUV420" title="分享到Facebook">Facebook</a>
+                        </li>
+                        <li>
+                            <a target="_blank" href="http://share.baidu.com/s?type=text&amp;searchPic=0&amp;sign=on&amp;to=twi&amp;url=http://www.tuicool.com/articles/rmQ732&amp;title=Live555接收h264使用ffmpeg解码为YUV420" title="分享到Twitter">Twitter</a>
+                        </li>
+                        <li>
+                            <a target="_blank" href="http://share.baidu.com/s?type=text&amp;searchPic=0&amp;sign=on&amp;to=linkedin&amp;url=http://www.tuicool.com/articles/rmQ732&amp;title=Live555接收h264使用ffmpeg解码为YUV420" title="分享到Linkedin">Linkedin</a>
+                        </li>
+                        <li>
+                            <a href="https://plus.google.com/share?url={http://www.tuicool.com/articles/rmQ732}" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" title="分享到G+">Google +</a>
+                        </li>
+                        <li class="divider">
+                        </li>
+                        <li>
+                            <a href="mailto:?subject=好文分享：Live555接收h264使用ffmpeg解码为YUV420&amp;body=/articles/rmQ732">E-Mail</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+			<a href="/mobile?s=a" target="_blank"><img src="/images/mobile_rec.jpg" width="250" style="margin-left:20px"/></a>
+
+            <!-- <a class="sept-bar" href="http://app.xiaomi.com/detail/16936" target="_blank">
+            <img src="/images/logo.jpg" />
+            推酷壹时代首发小米商店 >
+            </a> -->
+        </div>
+    </div>
+</div>
+<div class="row-fluid" style="margin-top:0;">
+    <div class="span8">
+        <div id="site_articles">
+        </div>
+        <div id="kan_articles">
+        </div>
+        <div id="article_weibo">
+            <div class='header-title'>
+                <span>相关微博</span>
+                <sub>
+                    <a href="/articles/weibo_list/rmQ732" target="_blank">共有(<i></i>)条</a>
+                </sub>
+            </div>
+            <div class="related-weibo-list">
+            </div>
+        </div>
+        <div class="comments">
+            <div class="cover">
+                <div class="comment-notlogin">
+                请登录后评论
+                </br>
+                <small style="margin-top: 5px;">
+                    已发表评论数(<span class="comment_cnt"></span>)
+                </small>
+            </div>
+            <div class="comment-loading">
+                <div id="spinner2">
+                </div>
+                评论加载中
+            </div>
+        </div>
+        <div class="comments-area" style="display:none;">
+            <div class="comments-list">
+                <div class="empty-cmts alert alert-success" style="display:none;">
+                    没有更多评论了^^
+                </div>
+            </div>
+            <div class="more-comments" style="display:none;">
+                <!--
+                <a href="/articles/rmQ732/comments" target="_blank">所有评论</a>--><a href="">更多评论</a>
+            </div>
+
+            <div class="load-fail" style="display:none;">
+                评论加载失败，<a href="javascript:reload_comments('rmQ732',1,0,-1);">重新加载</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="span4">
+</div>
+</div>
+<div id="article-correct-modal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+        </button>
+        <h3>文章纠错</h3>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" value="rmQ732" id="article-correct-source">
+        <div>
+            <label for="article-correct-email">
+                邮箱
+            </label>
+            <input type="email" id="article-correct-email" class="input-large" />
+        </div>
+        <div>
+            <label for="article-correct-select">
+                错误类型
+            </label>
+            <select id="article-correct-select">
+                <option value="正文不准确">正文不准确</option>
+                <option value="排版有问题">排版有问题</option>
+                <option value="没有分页内容">没有分页内容</option>
+                <option value="视频无法显示">视频无法显示</option>
+                <option value="图片无法显示">图片无法显示</option>
+            </select>
+        </div>
+        <div>
+            <label for="article-correct-other">
+                补充信息
+            </label>
+            <textarea id="article-correct-other" class="span6">
+            </textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary pull-right huodong_correct_submit" id="article-correct-submit">
+            提交
+        </button>
+    </div>
+</div>
+<div id="myLoginModal" class="modal hide fade">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal" >&times;</a>
+		<h3>用户登陆</h3>
+	</div>
+	<div class="modal-body">
+		<form method="post" action="/login" class="form-horizontal" id="login-form">
+			<div class="control-group">
+				<span class="control-label" for="xlEmail">邮箱</span>
+				<div class="login-controls">
+					<input class="input-medium" id="xlEmail" name="email" type="text" />
+				</div>
+			</div>
+			<div class="control-group">
+				<span class="control-label">密码</span>
+				<div class="login-controls">
+					<input id="xlPassword" name="password" class="input-medium" type="password" />
+				</div>
+			</div>
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">
+					&nbsp;&nbsp;登&nbsp;&nbsp;&nbsp;陆&nbsp;&nbsp;
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="read-later-alert">
+</div>
+<style type="text/css">
+    #dup-cnt {
+        display: none;
+    }
+    
+    .btn-large {
+        padding: 0;
+    }
+    
+    .load-fail {
+        display: none;
+    }
+    
+    .header-title {
+        margin-bottom: 10px;
+        line-height: 25px;
+    }
+    
+    .header-title span {
+        font-size: 16px;
+        height: 25px;
+    }
+</style>
+<script src="/assets/highlight.pack.js">
+</script>
+<script type="text/javascript">
+    		$(document).ready( function() {
+    	  	$.get("/articles/last_article_by_site_async?sid=vQZRB3&aid=rmQ732",function(data){$('#site_articles').append(data)});
+    		});	
+    		$.get('/articles/dup_count?id=rmQ732',function(data){
+    			if(data.success){
+    				if(data.data > 0){
+    					$('#dup-cnt').show();
+    				}
+    				$('#dup').text(data.data);
+    			}
+    		})	
+    $(document).ready( function() {
+    	$('pre').each(function(i, e) {
+    		hljs.highlightBlock(e, "<span class='indent'>  </span>", false)
+    	});
+      // 加载相关微
+      get_weibo("rmQ732");
+    	//async_do_like_article();
+        // 加载相关的推刊
+      related_kan("rmQ732");
+      open_add_article_to_kan("false");
+    	async_do_like2_article(); 
+    	window.page = 0;
+    	window.last = 0;	
+    	window.first = true;	
+    	resize_article_image('#nei', 550);	
+    			$('.btn-submit').hide();
+    			load_comments("rmQ732",1,0,-1);
+    			window.uid = -1;				
+    	
+    });
+    	  
+    
+</script>
+
+  <!-- body end -->
+</div>
+
+      <!--tc_footer start -->
+<div class="footer" style="margin-top:50px;">
+    <p>
+      <a href="/about" target="_blank">关于</a>
+      <a href="/mobile" target="_blank">应用</a>
+      <a href="/bbs/go/issues" target="_blank">反馈</a>
+      <a href="/bbs" target="_blank">讨论</a>
+    </p>
+</div>
+
+<!--   <div class="sept-notify">
+    <a href="javascript:close_sept();" class="close pull-right">&times;</a>
+    <a class="sept-notify-body" href="/septs" target="_blank">有一些书要送给你[第一季]</a>
+  </div> -->
+
+      <!--tc_footer end -->
+
+<div style="display:none;">
+  <script src="http://s22.cnzz.com/stat.php?id=5541078&web_id=5541078&show=pic" language="JavaScript"></script>
+</div>
+</body>
+</html>

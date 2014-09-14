@@ -1,0 +1,860 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html class='csdn-bbs'>
+  <head>
+    <script id="allmobilize" charset="utf-8" src="http://a.yunshipei.com/1327c36bdd7197e30fd9f4b48d1a5bcc/allmobilize.min.js"></script>
+<meta http-equiv="Cache-Control" content="no-transform" />
+<link rel="alternate" media="handheld" href="#" />
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ffmpeg解析H264 rtp数据流遇到的问题-CSDN论坛-CSDN.NET-中国最大的IT技术社区</title>
+    <link href="/assets/main-7e18fda88faa2b75162f752dfac7689d.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="//static.csdn.net/public/themes/default/css/btn.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="/assets/application-605005512cee9a4f19f253f72bc96d19.js" type="text/javascript"></script>
+    <meta content="authenticity_token" name="csrf-param" />
+<meta content="NPeydWrauKe45U86hh4P+A8lSrVjkbv6jxX5SkGXho4=" name="csrf-token" />
+    <link href="http://csdnimg.cn/public/favicon.ico" rel="SHORTCUT ICON">
+<link rel="stylesheet" href="http://static.csdn.net/public/common/toolbar/css/index.css">
+
+      <link href="/assets/sh-2bfcf65754f6d04d58df6ed87a3b6faf.css" media="all" rel="stylesheet" type="text/css" />
+  <script src="/assets/sh-e7799bf9690a86571a685dd3015e559c.js" type="text/javascript"></script>
+  <script src="http://passport.csdn.net/content/loginbox/login.js" type="text/javascript"></script>
+
+  </head>
+  <body id='topics-show'>
+    <!-- <script type="text/javascript" src="http://csdnimg.cn/pubnav/js/pub_topnav_2011.js"></script> -->
+<script id="toolbar-tpl-scriptId" skin="black" prod="bbs" fixed="true" src="http://static.csdn.net/public/common/toolbar/js/html.js" type="text/javascript"></script>
+
+    <div class="news-nav">
+      <div class="container">
+        <div class="nav-bar">
+          <a href="/home">首页</a>
+          <span class="dropdown">
+  <a href="#">精选版块</a>
+  <span class="caret"></span>
+  <div class="dropdown-menu">
+    <dl>
+      <dt><a href="/forums/Mobile">移动开发</a></dt>
+      <dd>
+        <a href="/forums/ios">iOS</a>
+        <a href="/forums/Android">Android</a>
+        <a href="/forums/Qt">Qt</a>
+        <a href="/forums/WindowsMobile">WP</a>
+      </dd>
+    </dl>
+    <dl>
+      <dt><a href="/forums/CloudComputing">云计算</a></dt>
+      <dd>
+        <a href="/forums/AWS">IaaS</a>
+        <a href="/forums/CloudFoundry">Pass/SaaS</a>
+        <a href="/forums/hadoop">分布式计算/Hadoop</a>
+      </dd>
+    </dl>
+    <dl>
+      <dt><a href="/forums/Java">Java技术</a></dt>
+      <dd>
+        <a href="/forums/J2SE">Java SE</a>
+        <a href="/forums/Java_WebDevelop">Java Web 开发</a>
+        <a href="/forums/J2EE">Java EE</a>
+        <a href="/forums/JavaOther">Java其他相关</a>
+      </dd>
+    </dl>
+    <dl>
+      <dt><a href="/forums/DotNET">.NET技术</a></dt>
+      <dd>
+        <a href="/forums/DotNETFramework">.NET Framework</a>
+        <a href="/forums/CSharp">C#</a>
+        <a href="/forums/DotNETAnalysisAndDesign">.NET分析与设计</a>
+        <a href="/forums/ASPDotNET">ASP .NET</a>
+        <a href="/forums/VBDotNET">VB .NET</a>
+      </dd>
+    </dl>
+    <dl>
+      <dt><a href="/forums/WebDevelop">Web开发</a></dt>
+      <dd>
+        <a href="/forums/PHP">PHP</a>
+        <a href="/forums/JavaScript">JavaScript</a>
+        <a href="/forums/ASP">ASP</a>
+        <a href="/forums/HTMLCSS">HTML(CSS)</a>
+        <a href="/forums/HTML5">HTML5</a>
+        <a href="/forums/Apache">Apache</a>
+      </dd>
+    </dl>
+    <dl>
+      <dt><a href="#">开发语言/框架</a></dt>
+      <dd>
+        <a href="/forums/Delphi">Delphi</a>
+        <a href="/forums/VC">VC/MFC</a>
+        <a href="/forums/VB">VB</a>
+        <a href="/forums/Cpp">C/C++</a>
+        <a href="/forums/BCB">C++ Builder</a>
+        <a href="/forums/OtherLanguage">其他开发语言</a>
+      </dd>
+    </dl>
+    <dl>
+      <dt><a href="#">数据库开发</a></dt>
+      <dd>
+        <a href="/forums/MSSQL">MS-SQL Server</a>
+        <a href="/forums/Oracle">Oracle</a>
+        <a href="/forums/PowerBuilder">PowerBuilder</a>
+        <a href="/forums/Informatica">Informatica</a>
+        <a href="/forums/OtherDatabase">其他数据库开发</a>
+      </dd>
+    </dl>
+    <dl>
+      <dt><a href="/forums/Embedded">硬件/嵌入式开发</a></dt>
+      <dd>
+        <a href="/forums/WinCE">嵌入开发(WinCE)</a>
+        <a href="/forums/Embedded_driver">驱动开发/核心开发</a>
+        <a href="/forums/Embedded_hardware">硬件设计</a>
+        <a href="/forums/Embedded_SCM">单片机/工控</a>
+        <a href="/forums/ASM">汇编语言</a>
+        <a href="/forums/VxWorks">VxWorks开发</a>
+      </dd>
+    </dl>
+    <dl>
+      <dt><a href="/forums/Linux">Linux/Unix社区</a></dt>
+      <dd>
+        <a href="/forums/Linux_System">系统维护与使用区</a>
+        <a href="/forums/Linux_Development">应用程序开发区</a>
+        <a href="/forums/Linux_Kernel">内核源代码研究区</a>
+        <a href="/forums/Linux_Driver">驱动程序开发区</a>
+        <a href="/forums/Linux_Hardware">CPU和硬件区</a>
+      </dd>
+    </dl>
+  </div>
+</span>
+
+          <a href="/help" class="">论坛帮助</a>
+          <a href="/rank" class="">论坛牛人</a>
+          <a href="/map" class="">论坛地图</a>
+        </div>
+      </div>
+    </div>
+    <div class="wraper">
+        <!-- 页顶通栏 -->
+  <iframe id="Topic_Top" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" width="100%" src="/sda/TopicPageTop.htm"></iframe>
+
+      <!--[if IE]>
+<style type="text/css" media="screen">
+  .control_area .control .drop_menu{border:3px solid #ccc \9; _*border:3px solid #ccc;}
+</style>
+<![endif]-->
+
+<!-- 页顶Button (D3) -->
+<iframe id="frm_tt1" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" width="100%" src="/sda/TopicBodyTop.htm?v=1"></iframe>
+<script type="text/javascript">
+  setTimeout(function () { document.getElementById("frm_tt1").src = "/sda/TopicBodyTop.htm?v="+new Date().getTime(); }, 5000);
+
+  $(function(){
+      //获取要定位元素距离浏览器顶部的距离
+      var navH = $(".detail_title_fixed").offset().top;
+      $(".detail_title_fixed").hide();
+
+      var show_detail_title_fixed = true;
+      //滚动条事件
+      $(window).scroll(function(){
+
+          //获取滚动条的滑动距离
+          var scroH = $(this).scrollTop();
+
+          //滚动条的滑动距离大于等于定位元素距离浏览器顶部的距离，就固定，反之就不固定
+          if(show_detail_title_fixed){
+              if(scroH>=navH){
+                  $(".detail_title_fixed").css({"position":"fixed","top":"0","border":"1px #198cc5 solid","z-index":"99999"});
+                  $(".detail_title_fixed").show();
+              }else if(scroH<navH){
+                  $(".detail_title_fixed").css({"position":"static"});
+                  $(".detail_title_fixed").hide();
+              }
+          }
+      });
+
+      $("#close_detail_title_fixed").click(function(){
+          show_detail_title_fixed = false;
+          $(".detail_title_fixed").hide();
+      });
+
+      $("#go-backhome").click(function(){
+        window.location.href="/";
+      });
+
+      $("#go-backchannel").click(function(){
+          window.location.href="/forums/Multimedia";
+      });
+  })
+</script>
+
+<div class="bread_nav">
+  <a href="http://www.csdn.net" target="_blank">CSDN</a> <em>&gt;</em>
+  <a href="/" target="_blank">CSDN论坛</a> <em>&gt;</em>
+    <a href="/forums/SpecialTopic" target="_blank">专题开发/技术/项目</a> <em>&gt;</em>
+  <a href="/forums/Multimedia" target="_blank">多媒体/流媒体开发</a>
+</div>
+
+<div class="flash_messages">
+</div>
+
+<div class="control_area top">
+  <form name="form" id="form">
+    
+    <span class='back_to_forum_list'><a href="/forums/Multimedia">返回列表</a></span>
+    <div class="control">
+      <ul>
+        <li class="drop_menu_wrap drop_menu_down">
+          <a href="#" class="drop_toggle btn_1 " rel='nofollow'>
+            <span>
+              <img src="/assets/ico_set.gif" alt="" />管理菜单<img src="/assets/arrow_down.gif" alt="" />
+            </span>
+          </a>
+          <ul class="drop_menu" style="display: none; top:26px;">
+              <li><a href="/topics/390725807/top" class="fancybox" rel="nofollow">置顶</a></li>
+
+  <li><a href="/topics/390725807/recommend" data-confirm="确定要将该帖推荐(加精)吗？被推荐的帖子将给帖主奖励可用分88分!" data-method="put" rel="nofollow">推荐</a></li>
+
+  <li><a href="/topics/390725807/lock" class="fancybox" rel="nofollow">锁定</a></li>
+
+<li><a href="/topics/390725807/move" class="fancybox" rel="nofollow">移动</a></li>
+<li><a href="/topics/390725807/edit" class="fancybox" rel="nofollow">编辑</a></li>
+<li><a href="/topics/390725807/destroy_edit" class="fancybox" rel="nofollow">删除</a></li>
+<li><a href="/topics/390725807/add_point" class="fancybox" rel="nofollow">帖子加分</a></li>
+  <li><a href="/topics/390725807/highlight" class="fancybox" rel="nofollow">帖子高亮</a></li>
+
+          </ul>
+        </li>
+        <li>
+          <a href="/topics/390725807/close" class="btn_1 close_topic" rel='nofollow'>
+            <span><img src="/assets/ico_over.gif" alt="" />结帖</span>
+          </a>
+        </li>
+        <li>
+          <a href="/topics/new?forum_id=Multimedia" class="btn_1 create_topic" rel='nofollow'>
+            <span><img src="/assets/ico_publish.gif" alt="" />发帖</span>
+          </a>
+        </li>
+        <li>
+          <a href="#new_post" class="btn_1 reply_topic" rel='nofollow'>
+            <span><img src="/assets/ico_return.gif" alt="" />回复</span>
+          </a>
+        </li>
+          <li>
+            <a href="/topics/390725807/attetion" class="btn_1 reply_topic" rel='nofollow'>
+              <span><img src="/assets/ico_attention_topic.png" title="关注" />关注</span>
+            </a>
+          </li>
+      </ul>
+    </div>
+  </form>
+</div>
+
+<div class="h-entry">
+  <a class="p-author" href="#">wajj1209</a>
+</div>
+
+
+<div class="detail_tbox">
+    <div class="detail_title_fixed">
+      <h1>
+            <span class="title text_overflow">ffmpeg解析H264 rtp数据流遇到的问题</span>
+        <span>
+          [问题点数：40分]
+        </span>
+      </h1>
+
+      <div class="fixed-r">
+        <a href="#new_post" class="bbs-btn-blue26">快速回复</a>
+            <a href="/topics/390725807?list=lz" class="bbs-btn-blue26">只显示楼主</a>
+            <a href="/topics/390725807/attetion" class="bbs-btn-blue26">关注帖子</a>
+        <a href="javascript:void(0);" id="close_detail_title_fixed" class="bbs-btn-close"> </a>
+      </div>
+    </div>
+    <div class="detail_title">
+      <h1>
+          <span class="title text_overflow">ffmpeg解析H264 rtp数据流遇到的问题</span>
+        <span>
+          [问题点数：40分]
+        </span>
+      </h1>
+      <div class="fr">
+        <select name="filter_posts">
+          <option value="default">不显示删除回复</option>
+          <option value="all">显示所有回复</option>
+          <option value="star">显示星级回复</option>
+          <option value="pointed">显示得分回复</option>
+          <option value="lz">只显示楼主</option>
+        </select>
+        <a href="http://my.csdn.net/my/favorite/miniadd?u=http://bbs.csdn.net/topics/390725807&amp;t=ffmpeg%E8%A7%A3%E6%9E%90H264%20rtp%E6%95%B0%E6%8D%AE%E6%B5%81%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98" id="fav" class="fav" rel='nofollow'><img src="/assets/nolines_plus.gif" alt="" />收藏</a>
+      </div>
+    </div>
+</div>
+<div class="detailed">
+    
+
+<table border="0" cellspacing="0" cellpadding="0" id="post-396895221"
+  class="post topic "
+  data-post-id="396895221" data-is-topic-locked="false">
+  <colgroup><col width="180" /><col /></colgroup>
+  <tr>
+      <td rowspan="2" valign="top" class="wirter">
+                <dl class="user_info ">
+          <dt class="user_head" data-username="wajj1209">
+            <a href="http://my.csdn.net/wajj1209" rel="nofollow" target="_blank"><img alt="wajj1209" class="avatar" src="http://avatar.csdn.net/1/D/F/1_wajj1209.jpg" /></a>
+          </dt>
+
+            <dd id="999719_bbs-btn-close-attention" class="bbs-user-att" style="display:none;">
+              <a href="/users/999719/cancel_attention" class="bbs-btn-blue25 bbs-btn-close-attention" data-method="get" data-remote="true">取消关注</a>
+            </dd>
+            <dd id="999719_bbs-btn-attention" class="bbs-user-att">
+              <a href="/users/999719/attention" class="bbs-btn-blue25 bbs-btn-attention" data-method="get" data-remote="true">关注</a>
+            </dd>
+
+          <dd class="username">
+            <a href="http://my.csdn.net/wajj1209" rel="nofollow" target="_blank">wajj1209</a>
+            
+          </dd>
+          <dd class="nickname">
+            <span class="name2nick">wajj1209</span>
+          </dd>
+          <dd title="总技术分：20；总技术排名：277530">等级：<img alt="Blank" class="grade user1" src="/assets/blank.gif" /></dd>
+          <dd class="close_rate" title="用户结帖率：91.3%
+总发帖：23
+正常结帖：21
+未结帖：2">结帖率：91.3%</dd>
+          
+        </dl>
+
+      </td>
+      <td valign="top" class="post_info topic" data-username="wajj1209" data-floor="">
+                <div class="data">
+            <strong class="fr">
+              楼主
+            </strong>
+          <span class="time">
+              发表于：
+            2014-03-07 11:26:29
+          </span>
+        </div>
+        <div class="post_body">
+
+              <div class="tag">
+                  <span><a href="http://www.csdn.net/tag/ffmpeg" target="_blank">ffmpeg</a></span>
+                  <span><a href="http://www.csdn.net/tag/h264" target="_blank">h264</a></span>
+                  <span><a href="http://www.csdn.net/tag/视频流" target="_blank">视频流</a></span>
+              </div>
+
+            大侠们，我遇到一个问题，请教一下各位。我使用ffmpeg&nbsp;0.9.2版本，解码H264的视频流,udp的。由于网络原因，难免都丢包。这个时候，发现解出的图像存在跳跃的现象。就是当前显示的是20秒的图像，但是下一幅图像是19秒，然后又跳到21秒的图像。丢包越严重，这种图像跳跃现象也越严重。请问这是什么原因造成的。主要代码如下：<br />
+<pre class="brush: c">jint&nbsp;Java_h264_com_VView_InitDecoder(JNIEnv*&nbsp;env,&nbsp;jobject&nbsp;thiz,&nbsp;jint&nbsp;width,&nbsp;jint&nbsp;height)<br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iWidth&nbsp;=&nbsp;width;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iHeight&nbsp;=&nbsp;height;<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CreateYUVTab_16();<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;avcodec_init();<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;avcodec_register_all();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;codec&nbsp;=&nbsp;avcodec_find_decoder(CODEC_ID_H264);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(!codec)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;0;<br />
+#if&nbsp;0<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c&nbsp;=&nbsp;avcodec_alloc_context3(codec);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(!c)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;0;<br />
+#else<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c&nbsp;=&nbsp;avcodec_alloc_context();<br />
+#endif<br />
+&nbsp;&nbsp;&nbsp;&nbsp;//初始化参数，下面的参数应该由具体的业务决定&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c-&gt;time_base.num&nbsp;=&nbsp;1;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c-&gt;frame_number&nbsp;=&nbsp;1;&nbsp;//每包一个视频帧&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c-&gt;codec_type&nbsp;=&nbsp;AVMEDIA_TYPE_VIDEO;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c-&gt;bit_rate&nbsp;=&nbsp;0;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c-&gt;time_base.den&nbsp;=&nbsp;15;//帧率&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//codec_-&gt;width&nbsp;=&nbsp;1280;//视频宽&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//codec_-&gt;height&nbsp;=&nbsp;720;//视频高&nbsp;&nbsp;<br />
+#if&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(codec-&gt;capabilities&amp;CODEC_CAP_TRUNCATED)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c-&gt;flags|=&nbsp;CODEC_FLAG_TRUNCATED;&nbsp;//&nbsp;we&nbsp;do&nbsp;not&nbsp;send&nbsp;complete&nbsp;frames<br />
+#endif<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(avcodec_open(c,&nbsp;codec)&nbsp;&lt;&nbsp;0)&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;0;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;picture&nbsp;&nbsp;=&nbsp;avcodec_alloc_frame();//picture=&nbsp;malloc(sizeof(AVFrame));<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;1;<br />
+}<br />
+<br />
+/*<br />
+*&nbsp;Class:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h264_com_VView<br />
+*&nbsp;Method:&nbsp;&nbsp;&nbsp;&nbsp;UninitDecoder<br />
+*&nbsp;Signature:&nbsp;()I<br />
+*/<br />
+jint&nbsp;Java_h264_com_VView_UninitDecoder(JNIEnv*&nbsp;env,&nbsp;jobject&nbsp;thiz)<br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(c){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;avcodec_close(c);&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;av_free(c);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c&nbsp;=&nbsp;NULL;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(picture){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;av_free(picture);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;picture&nbsp;=&nbsp;NULL;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DeleteYUVTab();<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;1;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+}<br />
+<br />
+/*<br />
+*&nbsp;Class:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;h264_com_VView<br />
+*&nbsp;Method:&nbsp;&nbsp;&nbsp;&nbsp;DecoderNal<br />
+*&nbsp;Signature:&nbsp;([B[I)I<br />
+*/<br />
+jint&nbsp;Java_h264_com_VView_DecoderNal(JNIEnv*&nbsp;env,&nbsp;jobject&nbsp;thiz,&nbsp;jbyteArray&nbsp;in,&nbsp;jint&nbsp;nalLen,&nbsp;jbyteArray&nbsp;out)<br />
+{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;i;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;imod;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;got_picture;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;int&nbsp;j=0;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;static&nbsp;cur_ptk&nbsp;=&nbsp;0;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jbyte&nbsp;*&nbsp;Buf&nbsp;=&nbsp;(jbyte*)(*env)-&gt;GetByteArrayElements(env,&nbsp;in,&nbsp;0);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jbyte&nbsp;*&nbsp;Pixel=&nbsp;(jbyte*)(*env)-&gt;GetByteArrayElements(env,&nbsp;out,&nbsp;0);<br />
+<br />
+#if&nbsp;1<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AVPacket&nbsp;avpkt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;av_init_packet(&amp;avpkt);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;avpkt.data&nbsp;=&nbsp;Buf;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;avpkt.size&nbsp;=&nbsp;nalLen;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;avpkt.pts&nbsp;=&nbsp;j++;<br />
+#endif<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;consumed_bytes&nbsp;=&nbsp;&nbsp;avcodec_decode_video2(c,&nbsp;picture,&nbsp;&amp;got_picture,&nbsp;&amp;avpkt);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;//int&nbsp;consumed_bytes&nbsp;=&nbsp;avcodec_decode_video(c,&nbsp;picture,&nbsp;&amp;got_picture,&nbsp;Buf,nalLen);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;if(got_picture&nbsp;==&nbsp;0){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;consumed_bytes&nbsp;=&nbsp;0;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGD("y==0&nbsp;no&nbsp;frame*!!!*");<br />
+&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(consumed_bytes&nbsp;&gt;&nbsp;0&nbsp;&amp;&amp;&nbsp;got_picture)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGD("avpkt&nbsp;index&nbsp;3(%ld-%ld-%d)",avpkt.pts,avpkt.dts,avpkt.stream_index);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//if(avpkt.pts&nbsp;-&nbsp;cur_ptk&nbsp;&lt;=2&nbsp;&amp;&amp;&nbsp;avpkt.pts-cur_ptk&gt;0){<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DisplayYUV_16((int*)Pixel,&nbsp;picture-&gt;data[0],&nbsp;picture-&gt;data[1],&nbsp;picture-&gt;data[2],&nbsp;c-&gt;width,&nbsp;c-&gt;height,&nbsp;picture-&gt;linesize[0],&nbsp;picture-&gt;linesize[1],&nbsp;iWidth);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//}else{<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//consumed_bytes&nbsp;=&nbsp;0;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//LOGD("delete&nbsp;avpkt&nbsp;(%ld)",avpkt.pts);<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cur_ptk&nbsp;=&nbsp;avpkt.pts;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;(*env)-&gt;ReleaseByteArrayElements(env,&nbsp;in,&nbsp;Buf,&nbsp;0);&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;(*env)-&gt;ReleaseByteArrayElements(env,&nbsp;out,&nbsp;Pixel,&nbsp;0);&nbsp;<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;consumed_bytes;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+}</pre>
+
+              <div id='topic-extra-info'>
+                <div class='social-share' >
+  <!-- Baidu Button BEGIN -->
+  <span id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+    <a class="bds_tsina"></a>
+    <a class="bds_tqq"></a>
+    <span class="bds_more">更多</span>
+    <a class="shareCount"></a>
+  </span>
+  <span class='prompt'>分享到：</span>
+  <script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=3329407" ></script>
+  <script type="text/javascript" id="bdshell_js"></script>
+  <script type="text/javascript">
+    var bds_config = {
+      "snsKey": { 
+        'tsina': '3657746030',
+        'tqq': '801356742',
+      }
+    };
+
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+  </script>
+  <!-- Baidu Button END -->
+</div>
+
+              </div>
+
+              <!-- 主帖下Banner (D4) -->
+              <!-- 主帖下文字 (D5) -->
+              <iframe id="tad2" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" width="100%" src="/sda/TopicBodyBottom.htm"></iframe>
+        </div>
+
+      </td>
+    </tr>
+    <tr>
+      <td valign="bottom">
+          <div class="control">
+  <div class="fr">
+      <a href="/posts/396895221/digg?topic_id=390725807" class="red digg" data-method="put" data-remote="true" rel="nofollow">对我有用[0]</a>
+      <a href="/posts/396895221/bury?topic_id=390725807" class="bury" data-method="put" data-remote="true" rel="nofollow">丢个板砖[0]</a>
+      <a href="#quote" class="quote" rel='nofollow'>引用</a> |
+      <a href="/posts/396895221/report?topic_id=390725807" class="fancybox red report_spam" rel="nofollow">举报 </a> |
+    <span class="manage-toggle">
+      <div class="manage" style="display: none;">
+          <a href="/topics/390725807/edit" class="fancybox" rel="nofollow">编辑</a>
+          <a href="/topics/390725807/destroy_edit" class="fancybox" rel="nofollow">删除</a>
+      </div>
+      管理
+    </span>
+  </div>
+    <span class="return_time">回复次数：1</span>
+</div>
+
+      </td>
+  </tr>
+</table>
+
+
+  <div id="topic-suggest">
+      <div class="related-tags">
+    <span>相关主题推荐：</span>
+      <a href="http://www.csdn.net/tag/数据" target="_blank">数据</a>
+      <a href="http://www.csdn.net/tag/rtp" target="_blank">rtp</a>
+      <a href="http://www.csdn.net/tag/视频" target="_blank">视频</a>
+      <a href="http://www.csdn.net/tag/sizeof" target="_blank">sizeof</a>
+      <a href="http://www.csdn.net/tag/malloc" target="_blank">malloc</a>
+  </div>
+
+      <div class="related-topics tracking-ad" data-pid="bbs" data-mod="popu_18">
+    <span>相关帖子推荐：</span>
+    <ul>
+        <li><a href="http://bbs.csdn.net/topics/390785582" target="_blank">C# 将视频进行H264编码和解码</a></li>
+        <li><a href="http://bbs.csdn.net/topics/390787205" target="_blank">基于DirectShow的捕捉摄像头并显示在远端机器上，H264的编解码器有可用的</a></li>
+        <li><a href="http://bbs.csdn.net/topics/390787530" target="_blank">两个礼拜急死了ffmpeg官网上下的库,debug模式下没错,release模式下动态库序数无法定位,求大神可怜啊</a></li>
+        <li><a href="http://bbs.csdn.net/topics/390790190" target="_blank">android 播放socket发送的视频流问题</a></li>
+        <li><a href="http://bbs.csdn.net/topics/390792051" target="_blank">C# 操作摄像头视频流</a></li>
+        <li><a href="http://bbs.csdn.net/topics/390792072" target="_blank">iOS  ffmpeg因为网络丢包导致花屏</a></li>
+        <li><a href="http://bbs.csdn.net/topics/390793972" target="_blank">音频与视频合适开始同步？本人菜鸟，请高手帮忙,重分酬劳</a></li>
+        <li><a href="http://bbs.csdn.net/topics/390794431" target="_blank">ffmpeg集成dolby 的音频编码器出现问题</a></li>
+    </ul>
+  </div>
+
+</div>
+  <script>
+    var topic_suggest = $('#topic-suggest');
+    $('#topic-extra-info').append(topic_suggest);
+  </script>
+
+  
+
+<table border="0" cellspacing="0" cellpadding="0" id="post-396911514"
+  class="post  "
+  data-post-id="396911514" data-is-topic-locked="false">
+  <colgroup><col width="180" /><col /></colgroup>
+  <tr>
+      <td rowspan="2" valign="top" class="wirter">
+                <dl class="user_info ">
+          <dt class="user_head" data-username="yhc223">
+            <a href="http://my.csdn.net/yhc223" rel="nofollow" target="_blank"><img alt="yhc223" class="avatar" src="http://avatar.csdn.net/C/3/F/1_yhc223.jpg" /></a>
+          </dt>
+
+            <dd id="7062067_bbs-btn-close-attention" class="bbs-user-att" style="display:none;">
+              <a href="/users/7062067/cancel_attention" class="bbs-btn-blue25 bbs-btn-close-attention" data-method="get" data-remote="true">取消关注</a>
+            </dd>
+            <dd id="7062067_bbs-btn-attention" class="bbs-user-att">
+              <a href="/users/7062067/attention" class="bbs-btn-blue25 bbs-btn-attention" data-method="get" data-remote="true">关注</a>
+            </dd>
+
+          <dd class="username">
+            <a href="http://my.csdn.net/yhc223" rel="nofollow" target="_blank">yhc223</a>
+            
+          </dd>
+          <dd class="nickname">
+            <span class="name2nick">yhc223</span>
+          </dd>
+          <dd title="总技术分：365；总技术排名：57297">等级：<img alt="Blank" class="grade user2" src="/assets/blank.gif" /></dd>
+          <dd class="close_rate" title="用户结帖率：100%
+总发帖：9
+正常结帖：9
+未结帖：0">结帖率：100%</dd>
+          
+        </dl>
+
+      </td>
+      <td valign="top" class="post_info " data-username="yhc223" data-floor="1">
+                <div class="data">
+            <span class="fr">
+              <a href="#post-396911514">#1</a>
+              得分：0
+            </span>
+          <span class="time">
+              回复于：
+            2014-03-10 12:27:46
+          </span>
+        </div>
+        <div class="post_body">
+
+
+            你的代码模块划分的有问题，数据接收模块应该确保数据的连续性。比如确定当前收到的数据是第二十秒的，而十九秒的数据确认丢失了，那么即使再收到19秒的数据也不应该推送给播放器了。你的代码似乎也确认不了数据的丢失。如果这是demo，那么你想得到的测试结果应该是实现不了的。
+
+        </div>
+
+      </td>
+    </tr>
+    <tr>
+      <td valign="bottom">
+          <div class="control">
+    <div id='post-forum-bulletin-1'  class='fl tracking-ad' data-mod='popu_9'>
+    </div>
+  <div class="fr">
+      <a href="/posts/396911514/digg?topic_id=390725807" class="red digg" data-method="put" data-remote="true" rel="nofollow">对我有用[0]</a>
+      <a href="/posts/396911514/bury?topic_id=390725807" class="bury" data-method="put" data-remote="true" rel="nofollow">丢个板砖[0]</a>
+      <a href="#quote" class="quote" rel='nofollow'>引用</a> |
+      <a href="/posts/396911514/report?topic_id=390725807" class="fancybox red report_spam" rel="nofollow">举报 </a> |
+    <span class="manage-toggle">
+      <div class="manage" style="display: none;">
+          <a href="/posts/396911514/edit" class="fancybox" rel="nofollow">编辑</a>
+          <a href="/posts/396911514/destroy_edit" class="fancybox" rel="nofollow">删除</a>
+      </div>
+      管理
+    </span>
+  </div>
+</div>
+
+      </td>
+  </tr>
+</table>
+
+
+
+</div>
+
+<!-- <div class='around&#45;topics'> -->
+<!--   <span class='preview'> -->
+<!--      -->
+<!--   </span> -->
+<!--   | -->
+<!--   <span class='next'> -->
+<!--      -->
+<!--   </span> -->
+<!-- </div> -->
+
+<div class="control_area bottom">
+  <form name="form" id="form">
+    
+    <span class='back_to_forum_list'><a href="/forums/Multimedia">返回列表</a></span>
+    <div class="control">
+      <ul>
+        <li class="drop_menu_wrap drop_menu_up">
+          <a href="#" class="drop_toggle btn_1 drop_toggle_up" rel='nofollow'>
+            <span>
+              <img src="/assets/ico_set.gif" alt="" />管理菜单<img src="/assets/arrow_down.gif" alt="" />
+            </span>
+          </a>
+          <ul class="drop_menu" style="display: none; bottom:26px">
+              <li><a href="/topics/390725807/top" class="fancybox" rel="nofollow">置顶</a></li>
+
+  <li><a href="/topics/390725807/recommend" data-confirm="确定要将该帖推荐(加精)吗？被推荐的帖子将给帖主奖励可用分88分!" data-method="put" rel="nofollow">推荐</a></li>
+
+  <li><a href="/topics/390725807/lock" class="fancybox" rel="nofollow">锁定</a></li>
+
+<li><a href="/topics/390725807/move" class="fancybox" rel="nofollow">移动</a></li>
+<li><a href="/topics/390725807/edit" class="fancybox" rel="nofollow">编辑</a></li>
+<li><a href="/topics/390725807/destroy_edit" class="fancybox" rel="nofollow">删除</a></li>
+<li><a href="/topics/390725807/add_point" class="fancybox" rel="nofollow">帖子加分</a></li>
+  <li><a href="/topics/390725807/highlight" class="fancybox" rel="nofollow">帖子高亮</a></li>
+
+          </ul>
+        </li>
+        <li>
+          <a href="/topics/390725807/close" class="btn_1 close_topic" rel='nofollow'>
+            <span><img src="/assets/ico_over.gif" alt="" />结帖</span>
+          </a>
+        </li>
+        <li>
+          <a href="/topics/new?forum_id=Multimedia" class="btn_1 create_topic" rel='nofollow'>
+            <span><img src="/assets/ico_publish.gif" alt="" />发帖</span>
+          </a>
+        </li>
+        <li>
+          <a href="#new_post" class="btn_1 reply_topic" rel='nofollow'>
+            <span><img src="/assets/ico_return.gif" alt="" />回复</span>
+          </a>
+        </li>
+          <li>
+            <a href="/topics/390725807/attetion" class="btn_1 reply_topic" rel='nofollow'>
+              <span><img src="/assets/ico_attention_topic.png" title="关注" />关注</span>
+            </a>
+          </li>
+      </ul>
+    </div>
+  </form>
+</div>
+<div class="comt">
+  <div class="ad_l">
+    <!-- 回复框文字 (D6) -->
+    <div>
+    <script language='JavaScript' type='text/javascript' src="http://ad.csdn.net/getcmsad.ashx?cols=6008b6f1-73ff-4fab-b954-6242fff23504&area=0&count=4"></script>
+    </div>
+    <ul class='tracking-ad' data-mod='popu_10'>
+        <li><a href="http://bbs.csdn.net/topics/390756196" class="title_style_black" target="_blank">2014年4月微软MVP当选名单揭晓！</a></li>
+    </ul>
+    <div class="ad_new tracking-ad" style='padding: 0 0 50px 0' data-mod='popu_11'>
+      <h4><img alt="" src="http://csdnimg.cn/www/images/csdn_logo_blue.gif"></h4>
+      <p class='title'>
+      <a href="http://bbs.csdn.net/topics/390762408" target="_blank">CSDN</a>
+      </p>
+      <p class='con'>
+      <a href="http://bbs.csdn.net/topics/390762408" target="_blank">CSDN社区问答精华QA</a>
+      </p>
+    </div>
+  </div>
+  <div class="reply">
+      <form accept-charset="UTF-8" action="/posts?topic_id=390725807" class="new_post" id="new_post" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="NPeydWrauKe45U86hh4P+A8lSrVjkbv6jxX5SkGXho4=" /></div>        <div>
+          <strong>回复内容</strong>
+            <span class="login">匿名用户不能发表回复！<a class='bbs_topic_loginbox_link' href="https://passport.csdn.net/account/login" target="_blank">登录</a>|<a href="https://passport.csdn.net/account/register" target="_blank">注册</a></span>
+        </div>
+        <div class="editor">
+          <textarea class="required quoteOnly" cols="40" id="post_body" name="post[body]" rows="20">
+</textarea>
+          <div class="pub">
+            <span class="fr">
+              每天回帖即可获得10分可用分！小技巧：<a href="/help#common_problem" target="_blank" rel='nofollow'>教您如何更快获得可用分</a>
+              <span id="body_count_notice" class="body_count_notice_fixed">你还可以输入10000个字符</span>
+            </span>
+            <input class="btn_b" id="submit_new_post_form" name="commit" type="submit" value="提交回复" />(Ctrl+Enter)
+          </div>
+        </div>
+        <ol class="notice">
+          <li>请遵守CSDN<a href='/help#user_criterion' rel='nofollow'>用户行为准则</a>，不得违反国家法律法规。</li>
+          <li>转载文章请注明出自“CSDN（www.csdn.net）”。如是商业用途请联系原作者。</li>
+        </ol>
+</form>      <script id="countTemplate" type="text/x-jquery-tmpl">
+        你还可以输入${count}个字符
+      </script>
+
+  </div>
+</div>
+<script>
+  $(function(){
+    $('.refresh-captcha').on('click', function(e){
+      e.preventDefault();
+      $('.captcha').load('/captchas/new');
+    });
+  });
+</script>
+
+<div class="tag_list_bbs">
+  <h4><a href="http://www.csdn.net/tag/" target="_blank">核心技术类目</a></h4>
+  <div class="classify">
+      <a href="http://www.csdn.net/tag" onclick="LogClickCount(this,336);" target="_blank" title="全部主题">全部主题</a>
+      <a href="http://www.csdn.net/tag/Java" onclick="LogClickCount(this,336);" target="_blank" title="Java">Java</a>
+      <a href="http://www.csdn.net/tag/vpn" onclick="LogClickCount(this,336);" target="_blank" title="VPN">VPN</a>
+      <a href="http://www.csdn.net/tag/android" onclick="LogClickCount(this,336);" target="_blank" title="Android">Android</a>
+      <a href="http://www.csdn.net/tag/ios" onclick="LogClickCount(this,336);" target="_blank" title="iOS">iOS</a>
+      <a href="http://www.csdn.net/tag/erp" onclick="LogClickCount(this,336);" target="_blank" title="ERP">ERP</a>
+      <a href="http://www.csdn.net/tag/ie10" onclick="LogClickCount(this,336);" target="_blank" title="IE10">IE10</a>
+      <a href="http://www.csdn.net/tag/eclipse" onclick="LogClickCount(this,336);" target="_blank" title="Eclipse">Eclipse</a>
+      <a href="http://www.csdn.net/tag/crm" onclick="LogClickCount(this,336);" target="_blank" title="CRM">CRM</a>
+      <a href="http://www.csdn.net/tag/javascript" onclick="LogClickCount(this,336);" target="_blank" title="JavaScript">JavaScript</a>
+      <a href="http://www.csdn.net/tag/ubuntu" onclick="LogClickCount(this,336);" target="_blank" title="Ubuntu">Ubuntu</a>
+      <a href="http://www.csdn.net/tag/nfc" onclick="LogClickCount(this,336);" target="_blank" title="NFC">NFC</a>
+      <a href="http://www.csdn.net/tag/wap" onclick="LogClickCount(this,336);" target="_blank" title="WAP">WAP</a>
+      <a href="http://www.csdn.net/tag/jquery" onclick="LogClickCount(this,336);" target="_blank" title="jQuery">jQuery</a>
+      <a href="http://www.csdn.net/tag/数据库" onclick="LogClickCount(this,336);" target="_blank" title="数据库">数据库</a>
+      <a href="http://www.csdn.net/tag/bi" onclick="LogClickCount(this,336);" target="_blank" title="BI">BI</a>
+      <a href="http://www.csdn.net/tag/html5" onclick="LogClickCount(this,336);" target="_blank" title="HTML5">HTML5</a>
+      <a href="http://www.csdn.net/tag/spring" onclick="LogClickCount(this,336);" target="_blank" title="Spring">Spring</a>
+      <a href="http://www.csdn.net/tag/apache" onclick="LogClickCount(this,336);" target="_blank" title="Apache">Apache</a>
+      <a href="http://www.csdn.net/tag/hadoop" onclick="LogClickCount(this,336);" target="_blank" title="Hadoop">Hadoop</a>
+      <a href="http://www.csdn.net/tag/.net" onclick="LogClickCount(this,336);" target="_blank" title=".NET">.NET</a>
+      <a href="http://www.csdn.net/tag/api" onclick="LogClickCount(this,336);" target="_blank" title="API">API</a>
+      <a href="http://www.csdn.net/tag/html" onclick="LogClickCount(this,336);" target="_blank" title="HTML">HTML</a>
+      <a href="http://www.csdn.net/tag/sdk" onclick="LogClickCount(this,336);" target="_blank" title="SDK">SDK</a>
+      <a href="http://www.csdn.net/tag/iis" onclick="LogClickCount(this,336);" target="_blank" title="IIS">IIS</a>
+      <a href="http://www.csdn.net/tag/fedora" onclick="LogClickCount(this,336);" target="_blank" title="Fedora">Fedora</a>
+      <a href="http://www.csdn.net/tag/xml" onclick="LogClickCount(this,336);" target="_blank" title="XML">XML</a>
+      <a href="http://www.csdn.net/tag/lbs" onclick="LogClickCount(this,336);" target="_blank" title="LBS">LBS</a>
+      <a href="http://www.csdn.net/tag/unity" onclick="LogClickCount(this,336);" target="_blank" title="Unity">Unity</a>
+      <a href="http://www.csdn.net/tag/splashtop" onclick="LogClickCount(this,336);" target="_blank" title="Splashtop">Splashtop</a>
+      <a href="http://www.csdn.net/tag/uml" onclick="LogClickCount(this,336);" target="_blank" title="UML">UML</a>
+      <a href="http://www.csdn.net/tag/components" onclick="LogClickCount(this,336);" target="_blank" title="components">components</a>
+      <a href="http://www.csdn.net/tag/windowsmobile" onclick="LogClickCount(this,336);" target="_blank" title="Windows Mobile">Windows Mobile</a>
+      <a href="http://www.csdn.net/tag/rails" onclick="LogClickCount(this,336);" target="_blank" title="Rails">Rails</a>
+      <a href="http://www.csdn.net/tag/qemu" onclick="LogClickCount(this,336);" target="_blank" title="QEMU">QEMU</a>
+      <a href="http://www.csdn.net/tag/kde" onclick="LogClickCount(this,336);" target="_blank" title="KDE">KDE</a>
+      <a href="http://www.csdn.net/tag/cassandra" onclick="LogClickCount(this,336);" target="_blank" title="Cassandra">Cassandra</a>
+      <a href="http://www.csdn.net/tag/cloudstack" onclick="LogClickCount(this,336);" target="_blank" title="CloudStack">CloudStack</a>
+      <a href="http://www.csdn.net/tag/ftc" onclick="LogClickCount(this,336);" target="_blank" title="FTC">FTC</a>
+      <a href="http://www.csdn.net/tag/coremail" onclick="LogClickCount(this,336);" target="_blank" title="coremail">coremail</a>
+      <a href="http://www.csdn.net/tag/ophone " onclick="LogClickCount(this,336);" target="_blank" title="OPhone ">OPhone </a>
+      <a href="http://www.csdn.net/tag/couchbase" onclick="LogClickCount(this,336);" target="_blank" title="CouchBase">CouchBase</a>
+      <a href="http://www.csdn.net/tag/云计算" onclick="LogClickCount(this,336);" target="_blank" title="云计算">云计算</a>
+      <a href="http://www.csdn.net/tag/iOS6" onclick="LogClickCount(this,336);" target="_blank" title="iOS6">iOS6</a>
+      <a href="http://www.csdn.net/tag/rackspace " onclick="LogClickCount(this,336);" target="_blank" title="Rackspace ">Rackspace </a>
+  </div>
+</div>
+
+
+
+<!-- 对联广告 -->
+<div id="ad_left" style="position:absolute;width:120px;top:184px;left:10px;display:none">
+  <a style="float:right;" href="#" onclick="javascript:this.parentNode.style.display='none';return false;">[关闭]</a>
+  <iframe src="/sda/TopicDaLeft.htm?v201305241722" frameborder="0" height="600" width="120" scrolling="no"></iframe>
+</div>
+<div id="ad_right" style="position:absolute;width:120px;top:184px;right:10px;display:none">
+  <a style="float:left;" href="#" onclick="javascript:this.parentNode.style.display='none';return false;">[关闭]</a>
+  <iframe src="/sda/TopicDaRight.htm?v201305241722" frameborder="0" height="600" width="120" scrolling="no"></iframe>
+</div>
+
+<script>
+  $(function(){
+    window.onresize = function(){
+      if($(parent.window).width() <= 1280){
+        $('#ad_right').hide();
+        $('#ad_left').hide();
+      }
+    };
+  });
+</script>
+
+
+<button id="go-backhome" class="btn btn-top bbs-btn-gray28 bbs-btn-backhome" title="回到首页" style="cursor: pointer; border: 0px none; bottom: 35px; width: 80px; height: 28px; margin: 0px; padding: 0px; position: fixed; right: 40px; display: block; padding-right:13px;">回到首页</button>
+<button id="go-backchannel" class="btn btn-top bbs-btn-gray28 bbs-btn-backchannel" title="回到频道" style="cursor: pointer; border: 0px none; bottom:68px; width: 80px; height: 28px; margin: 0px; padding: 0px; position: fixed; right: 40px; display: block; padding-right:13px;">回到频道</button>
+
+    </div>
+            <script type="text/javascript">
+          $(function(){ posts_page_js._form_page(); });
+        </script>
+<script type="text/javascript" language="javascript" charset="utf-8">
+//<![CDATA[
+$(function(){
+  $('.post .post_body fieldset+br').remove();
+  $('.post .post_body blockquote').each(function(index, item) {
+    var first_child = $(item).find(':first');
+    if($(item).contents().get(0) !== undefined &&
+      $(item).contents().get(0).nodeName.toLowerCase() === 'br' &&
+      first_child.prop('tagName').toLowerCase() === 'br') {
+      first_child.remove();
+    }
+  });
+
+  topics_page_js.show_page();
+  
+    var bulletin_link = '<a href="http://bbs.csdn.net/topics/390671520" class="title_style_red title_style_bold" target="_blank">CSDN投诉事项说明</a>'
+    $('#post-forum-bulletin-1').html(bulletin_link);
+    var bulletin_link = '<a href="http://www.csdn.net/article/2014-05-14/2819758" class="title_style_red title_style_bold" target="_blank">【社区之星】朱燚：转战传统应用的弄潮儿</a>'
+    $('#post-forum-bulletin-2').html(bulletin_link);
+});
+//]]>
+</script>
+<script type="text/javascript" src="http://ad.csdn.net/scripts/ad-bbs.js"></script>
+
+    <script src="http://csdnimg.cn/www/js/component.js"></script>
+    <script type="text/javascript">
+  document.write('<script type="text/javascript" src="http://csdnimg.cn/pubfooter/js/publib_footer.js?' + Math.floor(new Date()/120000).toString(36) + '="></'+'script>');
+</script>
+<script type="text/javascript" src="http://www.csdn.net/ui/scripts/Csdn/counter.js"></script>
+
+<script type="text/javascript" src="http://csdnimg.cn/pig/pubjs/cnick.js"></script>
+<script id="csdn-toolbar-id" btnId="header_notice_num" wrapId="note1" count="5" subCount="5" type="text/javascript" src="http://static.csdn.net/public/common/toolbar/js/toolbar.js"></script>
+  </body>
+</html>

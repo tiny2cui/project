@@ -1,0 +1,637 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>h.264 视频解码的一点小经验(ffmpeg) - 罗索实验室</title>
+<meta name="keywords" content="FFmpeg,H.264,解码" />
+<meta name="description" content="最近做视频文件264解码，由于对这个领域不是很熟悉，感觉困难重重。不过经过不懈的努力，已经取得一些进展，心里感觉特别庆幸。 刚开始做这个的时候，由于不熟悉，就在网上搜寻资料，网络上的资料虽然多，但是却很杂乱，因此一开始走了不少弯路，现在把我的一点小小心得" />
+
+<link href="http://www.rosoo.net/templets/style/dedecms.css" rel="stylesheet" media="screen" type="text/css" />
+<script src="http://www.rosoo.net/js/rs_top.js" type="text/javascript"></script>
+
+<script language="javascript" type="text/javascript" src="http://www.rosoo.net/include/dedeajax2.js"></script>
+<script language="javascript" type="text/javascript">
+<!--
+function CheckLogin(){
+	  var taget_obj = document.getElementById('_ajax_feedback');
+	  myajax = new DedeAjax(taget_obj,false,false,'','','');
+	  myajax.SendGet2("http://www.rosoo.net/member/ajax_feedback.php");
+	  DedeXHTTP = null;
+}
+function postBadGood(ftype,fid)
+{
+	var taget_obj = document.getElementById(ftype+fid);
+	var saveid = GetCookie('badgoodid');
+	if(saveid != null)
+	{
+		var saveids = saveid.split(',');
+		var hasid = false;
+		saveid = '';
+		j = 1;
+		for(i=saveids.length-1;i>=0;i--)
+		{
+			if(saveids[i]==fid && hasid) continue;
+			else {
+				if(saveids[i]==fid && !hasid) hasid = true;
+				saveid += (saveid=='' ? saveids[i] : ','+saveids[i]);
+				j++;
+				if(j==10 && hasid) break;
+				if(j==9 && !hasid) break;
+			}
+		}
+		if(hasid) { alert('您刚才已表决过了喔！'); return false;}
+		else saveid += ','+fid;
+		SetCookie('badgoodid',saveid,1);
+	}
+	else
+	{
+		SetCookie('badgoodid',fid,1);
+	}
+	myajax = new DedeAjax(taget_obj,false,false,'','','');
+	myajax.SendGet2("http://www.rosoo.net/plus/feedback.php?aid="+fid+"&action="+ftype+"&fid="+fid);
+}
+function postDigg(ftype,aid)
+{
+	var taget_obj = document.getElementById('newdigg');
+	var saveid = GetCookie('diggid');
+	if(saveid != null)
+	{
+		var saveids = saveid.split(',');
+		var hasid = false;
+		saveid = '';
+		j = 1;
+		for(i=saveids.length-1;i>=0;i--)
+		{
+			if(saveids[i]==aid && hasid) continue;
+			else {
+				if(saveids[i]==aid && !hasid) hasid = true;
+				saveid += (saveid=='' ? saveids[i] : ','+saveids[i]);
+				j++;
+				if(j==20 && hasid) break;
+				if(j==19 && !hasid) break;
+			}
+		}
+		if(hasid) { alert("您已经顶过该帖，请不要重复顶帖 ！"); return; }
+		else saveid += ','+aid;
+		SetCookie('diggid',saveid,1);
+	}
+	else
+	{
+		SetCookie('diggid',aid,1);
+	}
+	myajax = new DedeAjax(taget_obj,false,false,'','','');
+	var url = "http://www.rosoo.net/plus/digg_ajax.php?action="+ftype+"&id="+aid;
+	myajax.SendGet2(url);
+}
+function getDigg(aid)
+{
+	var taget_obj = document.getElementById('newdigg');
+	myajax = new DedeAjax(taget_obj,false,false,'','','');
+	myajax.SendGet2("http://www.rosoo.net/plus/digg_ajax.php?id="+aid);
+	DedeXHTTP = null;
+}
+-->
+</script>
+</head>
+<body class="articleview">
+<div align="center">
+ <script src="/js/page_head.js" type="text/javascript" charset="gb2312"></script>
+</div>
+
+<div class="header">
+	<div class="top w960 center">
+      <div class="title">
+        <h1> <a href="http://www.rosoo.net">罗索实验室</a> </h1>
+      </div>
+      <div class="banner">
+				<script src='/ad/js_ad_728x90_100.js'></script>
+      </div>
+	</div><!-- //top -->
+	<!-- //菜单 -->
+	<div class="module blue mT10 wrapper w963">
+  	<div class="top">
+    	<div class="t_l"></div>
+    	<div class="t_r"></div>
+    	<!-- //如果不使用currentstyle，可以在channel标签加入 cacheid='channeltoplist' 属性提升性能 -->
+    <div id="navMenu">
+    	<ul>
+      	<li><a href='http://www.rosoo.net/'>主页</a></li>
+      	<li class='hover'><a href='http://www.rosoo.net/a/index_strm.html'  rel='dropmenu1'>流媒体开发</a></li>
+      	<li><a href='http://www.rosoo.net/a/list_106_1.html'  rel='dropmenu106'>音视频技术</a></li>
+      	
+      	<li><a href='http://www.rosoo.net/a/index_em.html'  rel='dropmenu33'>嵌入式开发</a></li>
+      	
+      	<li><a href='http://www.rosoo.net/a/index_kb.html'  rel='dropmenu7'>基础技术</a></li>
+      	
+      	<li><a href='http://www.rosoo.net/a/index_dev.html'  rel='dropmenu13'>杂项技术</a></li>
+      	
+      	<li><a href='http://www.rosoo.net/a/index_mgr.html'  rel='dropmenu101'>管理学院</a></li>
+      	
+      	<li><a href='http://www.rosoo.net/a/index_it.html'  rel='dropmenu95'>啰嗦IT</a></li>
+      	
+      	<li><a href='http://www.rosoo.net/a/index_pro.html'  rel='dropmenu8'>大杂烩</a></li>
+      	
+    	</ul>
+    </div>	
+    <div class="search">
+      <form action="http://www.rosoo.net/plus/search.php" name="formsearch">
+        <div class="form">
+          <h4>搜索</h4>
+           <input type="hidden" name="kwtype" value="0" />
+           <input name="keyword" type="text" class="search-keyword" id="search-keyword" />
+           <select name="searchtype" class="search-option" id="search-option">
+               <option value="titlekeyword" selected='1'>智能模糊搜索</option>
+               <option value="title">仅搜索标题</option>
+           </select>
+          <button type="submit" class="search-submit">搜索</button>
+        </div>
+        </form>
+		<div class="tags">
+          <h4>热门标签</h4>
+          <ul>
+          <li>
+　<a href='http://www.rosoo.net/plus/search.php?keyword=%CA%D3%C6%B5%BC%E0%BF%D8%BC%BC%CA%F5'>视频监控技术</a> 　<a href='http://www.rosoo.net/plus/search.php?keyword=ffmpeg+ce'>ffmpeg ce</a> 　<a href='http://www.rosoo.net/plus/search.php?keyword=264'>264</a> 　<a href='http://www.rosoo.net/plus/search.php?keyword=ffmpeg'>ffmpeg</a> 　<a href='http://www.rosoo.net/plus/search.php?keyword=+'> </a> 　<a href='http://www.rosoo.net/plus/search.php?keyword=+.264+%C2%EB%C1%F7%B7%D6%CE%F6'> .264 码流分析</a> </li>
+          </ul>
+        </div>
+    </div><!-- //search -->
+		</div>
+	</div>
+</div><!-- //header -->
+
+<!-- /header -->
+
+<div class="channel-nav w960 center clear">
+	<div class='sonnav'>
+	<span><a href='http://www.rosoo.net/a/list_53_1.html' class='thisclass'>音视频编解码</a></span>
+		<span><a href='http://www.rosoo.net/a/list_45_1.html'>音视频播放</a></span>
+		<span><a href='http://www.rosoo.net/a/list_47_1.html'>视频处理</a></span>
+	</div>
+	<span class="back">
+		<a href="http://www.rosoo.net/">返回首页</a>
+	</span>
+</div><!-- /channel-nav -->
+
+<div class="w960 center clear mt1">
+	<div class="pleft">
+		<div class="place"><strong>当前位置:</strong> <a href='http://www.rosoo.net'>主页</a>><a href='http://www.rosoo.net/a/list_106_1.html'>音视频技术</a>><a href='http://www.rosoo.net/a/list_53_1.html'>音视频编解码</a>></div><!-- /place -->
+		<div class="viewbox">
+			<div class="title"><h2>h.264 视频解码的一点小经验(ffmpeg)</h2></div><!-- /title -->
+<div class="info">
+
+	<table width="100%" align="center">
+	<tr>
+	<td align="left">
+	罗索客 发布于 2008-01-16 09:36  <small>点击:</small><script src="http://www.rosoo.net/plus/count.php?view=yes&aid=6878&mid=0" type='text/javascript' language="javascript"></script>次&nbsp;
+	</td>
+	<td align="right">
+	<script src='/js/sc/sc.js'></script>
+	来自：网络博客
+	
+	</td>
+	</tr>
+	</table>
+
+</div><!-- /info -->
+
+		<div class="intro">最近做视频文件264解码，由于对这个领域不是很熟悉，感觉困难重重。不过经过不懈的努力，已经取得一些进展，心里感觉特别庆幸。 刚开始做这个的时候，由于不熟悉，就在网上搜寻资料，网络上的资料虽然多，但是却很杂乱，因此一开始走了不少弯路，现在把我的一点小小心得</div>
+
+<!-- content -->
+<div class="content" unselectable='on' onselectstart='return false;'>
+			<div><b>TAG: </b> <a href='http://www.rosoo.net/tags.php?/H264/'>H264</a>&nbsp;&nbsp;<a href='http://www.rosoo.net/tags.php?/FFMPEG/'>FFMPEG</a>&nbsp;&nbsp;<a href='http://www.rosoo.net/tags.php?/%BD%E2%C2%EB/'>解码</a>&nbsp;&nbsp;</div>
+
+			<table width='100%'>
+				<tr><td>
+				<script type="text/javascript" src="http://www.rosoo.net/ad/js_ad_468x15_100.js"></script>
+				<br/>
+<p>最近做视频文件264解码，由于对这个领域不是很熟悉，感觉困难重重。不过经过不懈的努力，已经取得一些进展，心里感觉特别庆幸。 刚开始做这个的时候，由于不熟悉，就在网上搜寻资料，网络上的资料虽然多，但是却很杂乱，因此一开始走了不少弯路，现在把我的一点小小心得写出来，后来的兄弟们可以参考一下，没准能够少走些弯路。当然啦，我在视频处理方面仍然是个非常菜的菜鸟，如果是高手路过，看到我这所谓的&ldquo;心得&rdquo;，也请不要见笑，看到不对的地方请批评指正，呵呵。</p><p>刚开始做的时候，先是在网络上查找资料，我觉得有一篇文章非常的有用，因为当时我最需要了解的就是世界上现存的各种编解码器，每种都有什么特性，比如说解码速度是否能够满足实时播放的需求、对h.264标准的支持程度等等。这篇文章就是《H.264开源解码器评测》，这篇文章详细的评测了当今流行的几种h.264解码器，包括JM Decoder,T264 Decoder,X264 Decoder,ffmpeg libavcodec和Intel的IPP库,经过作者的评测，发现速度最快的就是intel IPP了，但是intel IPP属于商品化软件，而其他的各种解码器都属于开源项目，所以最适合选择的就是解码速度第二的ffmpeg了，而且其速度完全可以满足实时播放的要求；</p><p>选择好了解码器，第一步算是完成了，第二步就是研究ffmpeg的用法了。经过摸索，我的选择是：到中华视频网下在ffmpeg SDK 2.0,这恐怕是目前最适合在V<a href='/a/list_100_1.html' target='_blank'><u>C++</u></a>6下使用的基于ffmpeg的SDK了，其易用性比较好。</p><p>第三步就是编写播放器外壳了，外壳代码采用VC++6编写，我会在文张末尾给出外壳的所有代码；注意：外科代码获取的lpdata是windows内存位图，具有dword对齐的特性，另外，解码出的图像是倒立的，因此我专门写了一个把图像倒转的函数，运行速度还是挺快的，完全不妨碍实时播放；</p><p>上一阶段的工作完成得还算满意，下一阶段的工作就是h.264 的 RTP payload<a href='/a/list_46_1.html' target='_blank'><u>协议</u></a>了。</p><p>附录：</p><p>h.264播放的外壳代码-------------------------------------------------------------------------------------------------</p><p>// Decode264.cpp : Defines the initialization routines for the DLL.</p><p>#include &quot;stdafx.h&quot;<br />#include &quot;Decode264.h&quot;</p><p>//以下代码为自己添加////////////////////////////<br />#include &lt;stdlib.h&gt;<br />#include &lt;time.h&gt;<br />#include &quot;avformat.h&quot;<br />#include &quot;avcodec.h&quot;<br />#include &lt;windows.h&gt;</p><p>//定义目标格式<br />#define DEST_FORMAT PIX_FMT_BGR24<br />//PIX_FMT_YUV420P</p><p>//定义全局变量<br />AVFormatContext *pFormatCtx; //<br />int i, videoStream;<br />AVCodecContext *pCodecCtx; <br />AVCodec *pCodec; //编解码器<br />AVFrame *pFrame; //帧<br />AVFrame *pFrameYUV; //YUV帧</p><p>clock_t t;<br />double fps;<br />int y_size, i_frame=0;<br />int numBytes;<br />uint8_t *buffer; <br />////////////////////////////////////////////////</p><p>#ifdef _DEBUG<br />#define new DEBUG_NEW<br />#undef THIS_FILE<br />static char THIS_FILE[] = __FILE__;<br />#endif</p><p>//<br />// Note!<br />//<br />// If this DLL is dynamically linked against the MFC<br />// DLLs, any functions exported from this DLL which<br />// call into MFC must have the AFX_MANAGE_STATE macro<br />// added at the very beginning of the function.<br />//<br />// For example:<br />//<br />// extern &quot;C&quot; BOOL PASCAL EXPORT ExportedFunction()<br />// {<br />// AFX_MANAGE_STATE(AfxGetStaticModuleState());<br />// // normal function body here<br />// }<br />//<br />// It is very important that this macro appear in each<br />// function, prior to any calls into MFC. This means that<br />// it must appear as the first statement within the <br />// function, even before any object variable declarations<br />// as their constructors may generate calls into the MFC<br />// DLL.<br />//<br />// Please see MFC Technical Notes 33 and 58 for additional<br />// details.<br />//</p><p>/////////////////////////////////////////////////////////////////////////////<br />// CDecode264App</p><p>BEGIN_MESSAGE_MAP(CDecode264App, CWinApp)<br />//{{AFX_MSG_MAP(CDecode264App)<br />// NOTE - the ClassWizard will add and remove mapping macros here.<br />// DO NOT EDIT what you see in these blocks of generated code!<br />//}}AFX_MSG_MAP<br />END_MESSAGE_MAP()</p><p>/////////////////////////////////////////////////////////////////////////////<br />// CDecode264App construction</p><p>CDecode264App::CDecode264App()<br />{<br />// TODO: add construction code here,<br />// Place all significant initialization in InitInstance<br />}</p><p>/////////////////////////////////////////////////////////////////////////////<br />// The one and only CDecode264App object</p><p>CDecode264App theApp;</p><p>//以下代码为自己添加/////////////////////////////////////////////////////////</p><p>//把图像倒立过来；<br />long UpendBmp(unsigned char *lpdata,long width ,long height)<br />{</p><p>long lBPL;//每行的字节数，因为要考虑dword对齐<br />long x,y,idx_src,idx_dest;<br />unsigned char *tmpdata;</p><p>if (0==((width*3)%4)) //nWidth * 3 是存储每行像素需要的字节数，如果是4的整数倍。<br />lBPL = (width*3); //那么返回 nWidth * 3 ，就是每行的字节数<br />else //如果不是4的整数倍，那么就一定要加上一个数，达到4的整数倍，才是每行的字节数。<br />lBPL = (width*3+(4-((width*3)%4)));<br /><br />tmpdata= new unsigned char[lBPL * height];<br /><br />x =0;<br />for (y=0 ; y&lt;height ; y++)<br />{<br />idx_src =(height-1-y)*lBPL;//idx_src =(height-1-y)*lBPL+x*3;优化前<br />idx_dest=y*lBPL;//idx_dest=y*lBPL+x*3;优化前<br />memcpy(&amp;tmpdata[idx_dest],&amp;lpdata[idx_src],lBPL);//复制一行<br />}</p><p>memcpy(lpdata,tmpdata,lBPL * height);<br />delete[] tmpdata;</p><p>return 0;<br />}</p><p>//创建一个bmp文件。用于调试<br />static int av_create_bmp(char* filename,uint8_t *pRGBBuffer,<br />int width,int height,int bpp)<br />{<br />BITMAPFILEHEADER bmpheader;<br />BITMAPINFO bmpinfo;<br />FILE *fp;</p><p>fp = fopen(filename,&quot;wb&quot;);<br />if(!fp)return -1;</p><p>bmpheader.bfType = (''M''&lt;&lt;8)|''B'';<br />bmpheader.bfReserved1 = 0;<br />bmpheader.bfReserved2 = 0;<br />bmpheader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);<br />bmpheader.bfSize = bmpheader.bfOffBits + width*height*bpp/8;<br /><br />bmpinfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);<br />bmpinfo.bmiHeader.biWidth = width;<br />bmpinfo.bmiHeader.biHeight = height;<br />bmpinfo.bmiHeader.biPlanes = 1;<br />bmpinfo.bmiHeader.biBitCount = bpp;<br />bmpinfo.bmiHeader.biCompression = BI_RGB;<br />bmpinfo.bmiHeader.biSizeImage = 0;<br />bmpinfo.bmiHeader.biXPelsPerMeter = 100;<br />bmpinfo.bmiHeader.biYPelsPerMeter = 100;<br />bmpinfo.bmiHeader.biClrUsed = 0;<br />bmpinfo.bmiHeader.biClrImportant = 0;</p><p>fwrite(&amp;bmpheader,sizeof(BITMAPFILEHEADER),1,fp);<br />fwrite(&amp;bmpinfo.bmiHeader,sizeof(BITMAPINFOHEADER),1,fp);<br />fwrite(pRGBBuffer,width*height*bpp/8,1,fp);<br />fclose(fp);</p><p>return 0;<br />}</p><p>//获取下一帧<br />static bool GetNextFrame(AVFormatContext *pFormatCtx, <br />AVCodecContext *pCodecCtx,<br />int videoStream, <br />AVFrame *pFrame)<br />{<br />static AVPacket packet; //AV包。静态变量。<br />static int bytesRemaining=0; //字节剩余。静态变量。<br />static uint8_t *rawData; //原始数据字节数。静态变量。<br />static bool fFirstTime=true; //标志，第一次；。静态变量。<br />int bytesDecoded; //解码后获得的字节；<br />int frameFinished; //帧解码完毕标志；</p><p>// First time we''re called, set packet.data to NULL to indicate it<br />// doesn''t have to be freed 当第一次被调用的时候，把packet.data设置为NULL,以表示<br />//它没有必要被释放；<br />if (fFirstTime){<br />fFirstTime = false;<br />packet.data = NULL;<br />}</p><p>//解码那些包，直到我们解码出一个完整的帧;<br />// Decode packets until we have decoded a complete frame<br />while (true)<br />{<br />//在当前包上工作，直到我们解码出所有的。<br />//Work on the current packet until we have decoded all of it<br />while (bytesRemaining &gt; 0)<br />{<br />// Decode the next chunk of data 解码出下一个数据块<br />bytesDecoded = avcodec_decode_video(pCodecCtx, pFrame,<br />&amp;frameFinished, rawData, bytesRemaining);</p><p>// Was there an error?<br />if (bytesDecoded &lt; 0){<br />fprintf(stderr, &quot;Error while decoding frame\\n&quot;);<br />return false;<br />}</p><p>bytesRemaining -= bytesDecoded;<br />rawData += bytesDecoded;</p><p>// Did we finish the current frame? Then we can return<br />if (frameFinished) //如果我们完成了当前帧的解码，就可以返回了<br />return true;<br />}</p><p>//读取下一个包，跳过所有的不是属于这个流的包；<br />// Read the next packet, skipping all packets that aren''t for this<br />// stream<br />do{<br />// Free old packet 释放旧包<br />if(packet.data != NULL)<br />av_free_packet(&amp;packet);</p><p>// Read new packet 读取新包<br />if(av_read_frame(pFormatCtx, &amp;packet) &lt; 0)<br />goto loop_exit;<br />} while(packet.stream_index != videoStream); //当不是要找的视频流的时候，继续循环，就是重新读了；<br />//直到找到要找的视频流，退出循环；</p><p>bytesRemaining = packet.size; //纪录包的字节数；<br />rawData = packet.data; //<br />}</p><p>loop_exit:</p><p>// Decode the rest of the last frame<br />bytesDecoded = avcodec_decode_video(pCodecCtx, pFrame, &amp;frameFinished, <br />rawData, bytesRemaining);</p><p>// Free last packet<br />if(packet.data != NULL)<br />av_free_packet(&amp;packet);</p><p>return frameFinished != 0;<br />}</p><p>//对外的API接口。打开264文件，并且获取必要的信息，比如宽度高度帧数等等<br />long __stdcall open264file(char *filename,long *out_width ,<br />long *out_height,long *out_framenum,<br />long *out_bufsize)<br />{</p><p><br />// Register all formats and codecs 注册所有的格式和编解码器<br />av_regi[FS:PAGE]ster_all();</p><p>// Open video file//打开视频文件<br />if (av_open_input_file(&amp;pFormatCtx, filename, NULL, 0, NULL) != 0) <br />return -1; // Couldn''t open file如果不能打开，那么返回-1</p><p>// Retrieve stream information 取流信息 <br />if (av_find_stream_info(pFormatCtx) &lt; 0)<br />return -1; // Couldn''t find stream information</p><p>// Dump information about file onto standard error<br />dump_format(pFormatCtx, 0, filename, false);</p><p>t = clock();<br /><br />// Find the first video stream 寻找第一个视频流<br />videoStream = -1;<br />for (i=0; i&lt;pFormatCtx-&gt;nb_streams; i++)<br />if(pFormatCtx-&gt;streams[i]-&gt;codec-&gt;codec_type == CODEC_TYPE_VIDEO){<br />videoStream=i;<br />break;<br />}<br />if (videoStream == -1)<br />return -1; // Didn''t find a video stream<br /><br />//获取该视频流的一个编解码器上下文的指针；<br />// Get a pointer to the codec context for the video stream <br />pCodecCtx = pFormatCtx-&gt;streams[videoStream]-&gt;codec;</p><p>// Find the decoder for the video stream 获取解码器<br />pCodec = avcodec_find_decoder(pCodecCtx-&gt;codec_id); <br /><br />if (pCodec == NULL)<br />return -1; // Codec not found解码器没有找到；</p><p>//告知解码器，我们能处理被删节的位流<br />// 也就是说，帧的分界处的位流可以落到包的中间；<br />// Inform the codec that we can handle truncated bitstreams -- i.e., <br />// bitstreams where frame boundaries can fall in the middle of packets <br />if ( pCodec-&gt;capabilities &amp; CODEC_CAP_TRUNCATED )<br />pCodecCtx-&gt;flags|=CODEC_FLAG_TRUNCATED;</p><p>// Open codec //打开解码器<br />if ( avcodec_open(pCodecCtx, pCodec) &lt; 0 )<br />return -1; // Could not open codec 不能打开解码器，返回-1；</p><p>// Allocate video frame 分配视频帧<br />pFrame = avcodec_alloc_frame();</p><p>// Allocate an AVFrame structure 分配一个AVFrame结构<br />pFrameYUV=avcodec_alloc_frame(); //解码后的帧<br />if(pFrameYUV == NULL)<br />return -1;</p><p>//决定需要多大的缓冲空间，并且分配空间；<br />// Determine required buffer size and allocate buffer <br />numBytes=avpicture_get_size(DEST_FORMAT, pCodecCtx-&gt;width,<br />pCodecCtx-&gt;height);<br />buffer = (uint8_t*)malloc(numBytes);<br /><br />//向外界输出宽高、帧数；<br />*out_width = pCodecCtx-&gt;width;<br />*out_height = pCodecCtx-&gt;height;<br />*out_framenum = pCodecCtx-&gt;frame_number;<br />*out_bufsize = numBytes;</p><p>// Assign appropriate parts of buffer to image planes in pFrameRGB <br />//把缓冲区中合适的部分指派到pFrameRGB中的图像面板<br />avpicture_fill((AVPicture *)pFrameYUV, buffer, DEST_FORMAT,<br />pCodecCtx-&gt;width, pCodecCtx-&gt;height);</p><p>return 0;<br />}</p><p>//对外的API接口。关闭264文件，释放相关资源<br />long __stdcall close264file()<br />{<br />//calculate decode rate 计算解码速率<br />t = clock() - t;<br />fps = (double)(t) / CLOCKS_PER_SEC;<br />fps = i_frame / fps;<br />printf(&quot;\\n==&gt;Decode rate %.4f fps!\\n&quot;, fps);<br /><br />// Free the YUV image 释放yuv图像<br />free(buffer);<br />av_free(pFrameYUV);</p><p>// Free the YUV frame 释放yuv帧<br />av_free(pFrame);<br />// Close the codec 关闭解码器<br />avcodec_close(pCodecCtx);<br />// Close the video file 关闭视频文件<br />av_close_input_file(pFormatCtx);</p><p>return 0;<br />}</p><p>//对外的API接口。获取一帧解码后的数据<br />long __stdcall GetNextFrame(unsigned char *lpdata)<br />{<br /><br />// Read frames 读取个个帧<br />if (GetNextFrame(pFormatCtx, pCodecCtx, videoStream, pFrame))<br />{<br />img_convert((AVPicture *)pFrameYUV, DEST_FORMAT, (AVPicture*)pFrame, <br />pCodecCtx-&gt;pix_fmt, pCodecCtx-&gt;width, pCodecCtx-&gt;height);</p><p><br />//调试用，向C盘写入一个bmp文件；<br />//av_create_bmp(&quot;c:\\\\1.bmp&quot;,(unsigned char *)pFrameYUV-&gt;data[0],pCodecCtx-&gt;width,pCodecCtx-&gt;height,24);</p><p>i_frame++;<br />y_size = pCodecCtx-&gt;width * pCodecCtx-&gt;height;</p><p>//写入文件<br />/*fwrite(pFrameYUV-&gt;data[0], 1, y_size, fp);<br />fwrite(pFrameYUV-&gt;data[1], 1, (y_size/4), fp);<br />fwrite(pFrameYUV-&gt;data[2], 1, (y_size/4), fp);*/<br />memcpy(lpdata,pFrameYUV-&gt;data[0],y_size*3);<br />UpendBmp(lpdata,pCodecCtx-&gt;width,pCodecCtx-&gt;height);<br />return 0;<br />}<br />else<br />{return -1;}<br />}<br />/////////////////////////////////////////////////////////////////////////////<br /></p>
+(iwgh)
+				<div class="dede_pages"></div>
+				</td></tr>
+			</table>
+</div>
+<!-- /content -->
+
+
+<div style="background:#efe;text-align:left;margin:20px 0;padding:3px 0 3px 10px;color:#666;font-size:10pt;line-height:22px;border-left:10px solid #CFC;">
+	本站文章除注明转载外，均为本站原创或编译欢迎任何形式的转载，但请务必注明出处，尊重他人劳动，同学习共成长。转载请注明：文章转载自：<strong>罗索实验室</strong> [<a href="http://www.rosoo.net/a/200801/6878.html">http://www.rosoo.net/a/200801/6878.html</a>]<br/>
+</div>
+
+<div>
+	<script type="text/javascript" src="http://www.rosoo.net/ad/js_ad_468x15_101.js"></script>
+</div>
+
+			<!-- //顶踩 -->
+			<div class="newdigg" id="newdigg">
+				<div class="diggbox digg_good" onmousemove="this.style.backgroundPosition='left bottom';" onmouseout="this.style.backgroundPosition='left top';" onclick="javascript:postDigg('good',6878)">
+					<div class="digg_act">顶一下</div>
+					<div class="digg_num">(8)</div>
+					<div class="digg_percent">
+						<div class="digg_percent_bar"><span style="width:88.9%"></span></div>
+						<div class="digg_percent_num">88.9%</div>
+					</div>
+				</div>
+				<div class="diggbox digg_bad" onmousemove="this.style.backgroundPosition='right bottom';" onmouseout="this.style.backgroundPosition='right top';" onclick="javascript:postDigg('bad',6878)">
+					<div class="digg_act">踩一下</div>
+					<div class="digg_num">(1)</div>
+					<div class="digg_percent">
+						<div class="digg_percent_bar"><span style="width:11.1%"></span></div>
+						<div class="digg_percent_num">11.1%</div>
+					</div>
+				</div>
+			</div>
+			<script language="javascript" type="text/javascript">getDigg(6878);</script>
+			<!-- //顶踩部份的源码结束 -->
+			
+			<div class="boxoff">
+				<strong>------分隔线----------------------------</strong>
+			</div>
+			<div class="handle">
+				<div class="context">
+					<ul>
+						<li>上一篇：<a href='http://www.rosoo.net/a/200707/6742.html'>RTP流数据用WINDOWS MEDIA SDK写录像，再播放时出现杂音</a> </li>
+						<li>下一篇：<a href='http://www.rosoo.net/a/200801/6879.html'>[转帖]如何在vc6下编译x264</a> </li>
+					</ul>
+				</div><!-- /context -->
+				<div class="actbox">
+					<ul>
+						<li id="act-fav"><a href="http://www.rosoo.net/plus/stow.php?aid=6878" target="_blank">收藏</a></li>
+						<li id="act-err"><a href="http://www.rosoo.net/plus/erraddsave.php?aid=6878&title=h.264 视频解码的一点小经验(ffmpeg)" target="_blank">挑错</a></li>
+						<li id="act-pus"><a href="http://www.rosoo.net/plus/recommend.php?aid=6878" target="_blank">推荐</a></li>
+						<li id="act-pnt"><a href="#" onClick="window.print();">打印</a></li>
+					</ul>
+				</div><!-- /actbox -->
+			</div><!-- /handle -->
+			
+<!--related archives-->
+<div class="mt1">
+		<dl class="tbox">
+			<dt>
+				<strong>相关文章</strong>
+			</dt>
+			<dd>
+        <ul class="c1 ico2">
+            <table width='100%' border='0' cellspacing='0' cellpadding='0'>
+<tr>
+    <td width='50%'>
+<li><a href="http://www.rosoo.net/a/201211/16372.html">H.264代码与标准如何对应</a></li>
+    </td>
+    <td width='50%'>
+<li><a href="http://www.rosoo.net/a/201210/16300.html">H.264码率控制中基于MAD比率的选择性跳帧算法 </a></li>
+    </td>
+    </tr>
+<tr>
+    <td width='50%'>
+<li><a href="http://www.rosoo.net/a/201210/16298.html">ffmpeg的新东东:AVFilter</a></li>
+    </td>
+    <td width='50%'>
+<li><a href="http://www.rosoo.net/a/201209/16262.html">H.264 Profile、Level、Encoder三张简图</a></li>
+    </td>
+    </tr>
+<tr>
+    <td width='50%'>
+<li><a href="http://www.rosoo.net/a/201207/16139.html">FFMpeg 中比较重要的函数以及数据结构</a></li>
+    </td>
+    <td width='50%'>
+<li><a href="http://www.rosoo.net/a/201207/16135.html">ffmpeg的内部Video Buffer管理和传送机制</a></li>
+    </td>
+    </tr>
+<tr>
+    <td width='50%'>
+<li><a href="http://www.rosoo.net/a/201206/16122.html">ffmpeg编码参数初始化</a></li>
+    </td>
+    <td width='50%'>
+<li><a href="http://www.rosoo.net/a/201206/16060.html">ffmpeg 0.8.2编译、迁移及水印测试</a></li>
+    </td>
+    </tr>
+<tr>
+    <td width='50%'>
+<li><a href="http://www.rosoo.net/a/201206/16054.html">终于在android下面完成了ffmpeg最新版的编译，弱弱的记录下--有</a></li>
+    </td>
+    <td width='50%'>
+<li><a href="http://www.rosoo.net/a/201205/16042.html">ffmpeg编译出来的libffmpeg.so太小的解决方法</a></li>
+    </td>
+    </tr>
+    </table>
+
+        </ul>
+			</dd>
+		</dl>
+</div>
+<!--related archives-->
+
+			
+		</div><!-- /viewbox -->
+
+<!-- //AJAX评论区 -->
+<!-- //主模板必须要引入/include/dedeajax2.js -->
+<a name='postform'></a>
+<div class="mt1">
+		<dl class="tbox">
+			<dt>
+				<strong>发表评论</strong>
+
+				<span class="more"></span>
+			</dt>
+			<dd>
+				<div class="dede_comment_post">
+          <form action="#" method="post" name="feedback">
+          <input type="hidden" name="dopost" value="send" />
+          <input type="hidden" name="comtype" value="comments">
+          <input type="hidden" name="aid" value="6878" />
+          <input type="hidden" name="fid" id='feedbackfid' value="0" />
+
+          <div class="dcmp-title">
+						<small>请自觉遵守互联网相关的政策法规，严禁发布色情、暴力、反动的言论。</small>
+					</div><!-- /dcmp-title -->
+					<div class="dcmp-stand">
+						<strong>评价:</strong>
+							<input type="radio" name="feedbacktype" checked="1" value="feedback" id="dcmp-stand-neu" /><label for="dcmp-stand-neu"><img src="/templets/default/images/cmt-neu.gif" />中立</label>
+							<input type="radio" name="feedbacktype" value="good" id="dcmp-stand-good" /><label for="dcmp-stand-good"><img src="/templets/default/images/cmt-good.gif" />好评</label>
+							<input type="radio" name="feedbacktype" value="bad" id="dcmp-stand-bad" /><label for="dcmp-stand-bad"><img src="/templets/default/images/cmt-bad.gif" />差评</label>
+					</div><!-- /dcmp-stand -->
+                    <div class="clr"></div>
+		<div class="dcmp-mood">
+			<strong>表情:</strong>
+			<ul>
+				<li><input type="radio" name="face" value="1" checked="1" /><img src="/templets/default/images/mood/ico-mood-1.gif" /></li><li><input type="radio" name="face" value="2" /><img src="/templets/default/images/mood/ico-mood-2.gif" /></li><li><input type="radio" name="face" value="3" /><img src="/templets/default/images/mood/ico-mood-3.gif" /></li><li><input type="radio" name="face" value="4" /><img src="/templets/default/images/mood/ico-mood-4.gif" /></li><li><input type="radio" name="face" value="5" /><img src="/templets/default/images/mood/ico-mood-5.gif" /></li><li><input type="radio" name="face" value="6" /><img src="/templets/default/images/mood/ico-mood-6.gif" /></li><li><input type="radio" name="face" value="7" /><img src="/templets/default/images/mood/ico-mood-7.gif" /></li><li><input type="radio" name="face" value="8" /><img src="/templets/default/images/mood/ico-mood-8.gif" /></li><li><input type="radio" name="face" value="9" /><img src="/templets/default/images/mood/ico-mood-9.gif" /></li><li><input type="radio" name="face" value="10" /><img src="/templets/default/images/mood/ico-mood-10.gif" /></li><li><input type="radio" name="face" value="11" /><img src="/templets/default/images/mood/ico-mood-11.gif" /></li>
+			</ul>
+		</div><!-- /dcmp-mood -->
+
+		<div class="dcmp-content">
+			<textarea cols="60" name="msg" rows="5" class="ipt-txt"></textarea>
+		</div><!-- /dcmp-content -->
+		<div class="dcmp-post"><!--未登陆-->
+			<div class="dcmp-userinfo" id="_ajax_feedback">
+用户名:<input type="text" name="username" size="16" class="ipt-txt" style="text-transform: uppercase;"/>
+验证码:<input type="text" name="validate" size="4" class="ipt-txt" style="text-transform:uppercase;"/><img src= "/include/vdimgck.php" id="validateimg" style="cursor:pointer" onclick="this.src=this.src+'?'" title="点击我更换图片" alt="点击我更换图片" />
+<input type="checkbox" name="notuser" id="dcmp-submit-guest" /><label for="dcmp-submit-guest" />匿名? </label>
+			</div>
+			<script language="javascript" type="text/javascript">CheckLogin();</script>
+			<div class="dcmp-submit">
+				<button type="button" onClick='PostComment()'>发表评论</button>
+			</div>
+		</div>
+        </form>
+	</div>
+			</dd>
+		</dl>
+	</div>
+<!-- //评论表单区结束 -->
+<!-- //评论内容区 -->
+	<a name='commettop'></a>
+	<div class="mt1">
+			<dl class="tbox">
+
+				<dt>
+					<strong>最新评论</strong>
+					<span class="more"><a href="/plus/feedback.php?aid=6878">进入详细评论页&gt;&gt;</a></span>
+				</dt>
+				<!-- //这两个ID的区块必须存在，否则JS会出错 -->
+				<dd id='commetcontentNew'></dd>
+				<dd id='commetcontent'></dd>
+			</dl>
+
+	</div>
+<!--
+//由于评论载入时使用异步传输，因此必须在最后一步加载（DIGG和评论框须放在评论内容前面）
+//如果一定需要提前的把myajax.SendGet改为myajax.SendGet2，但可能会引起页面阻滞
+-->
+<script language='javascript'>
+function LoadCommets(page)
+{
+		var taget_obj = document.getElementById('commetcontent');
+		var waithtml = "<div style='line-height:50px'><img src='/images/loadinglit.gif' />评论加载中...</div>";
+		var myajax = new DedeAjax(taget_obj, true, true, '', 'x', waithtml);
+		myajax.SendGet2("/plus/feedback_ajax.php?dopost=getlist&aid=6878&page="+page);
+		DedeXHTTP = null;
+}
+function PostComment()
+{
+		var f = document.feedback;
+		var nface = '6';
+		var nfeedbacktype = 'feedback';
+		var nvalidate = '';
+		var nnotuser = '';
+		var nusername = '';
+		var npwd = '';
+		var taget_obj = $DE('commetcontentNew');
+		var waithtml = "<div style='line-height:30px'><img src='/images/loadinglit.gif' />正在发送中...</div>";
+		if(f.msg.value=='')
+		{
+			alert("评论内容不能为空！");
+			return;
+		}
+		if(f.validate)
+		{
+			if(f.validate.value=='') {
+				alert("请填写验证码！");
+				return;
+			}
+			else {
+				nvalidate = f.validate.value;
+			}
+		}
+		if(f.msg.value.length > 500)
+		{
+			alert("你的评论是不是太长了？请填写500字以内的评论。");
+			return;
+		}
+		if(f.feedbacktype) {
+			for(var i=0; i < f.feedbacktype.length; i++)
+				if(f.feedbacktype[i].checked) nfeedbacktype = f.feedbacktype[i].value;
+		}
+		if(f.face) {
+			for(var j=0; j < f.face.length; j++)
+				if(f.face[j].checked) nface = f.face[j].value;
+		}
+		if(f.notuser.checked) nnotuser = '1';
+		if(f.username) nusername = f.username.value;
+		if(f.pwd) npwd = f.pwd.value;
+		
+		var myajax = new DedeAjax(taget_obj, false, true, '', '', waithtml);
+		myajax.sendlang = 'gb2312';
+		myajax.AddKeyN('dopost', 'send');
+		myajax.AddKeyN('aid', '6878');
+		myajax.AddKeyN('fid', f.fid.value);
+		myajax.AddKeyN('face', nface);
+		myajax.AddKeyN('feedbacktype', nfeedbacktype);
+		myajax.AddKeyN('validate', nvalidate);
+		myajax.AddKeyN('notuser', nnotuser);
+		myajax.AddKeyN('username', nusername);
+		myajax.AddKeyN('pwd', npwd);
+		myajax.AddKeyN('msg', f.msg.value);
+		myajax.SendPost2('/plus/feedback_ajax.php');
+		f.msg.value = '';
+		f.fid.value = 0;
+		if(f.validate)
+		{
+			if($DE('validateimg')) $DE('validateimg').src = "/include/vdimgck.php?"+f.validate.value;
+			f.validate.value = '';
+		}
+}
+function quoteCommet(fid)
+{
+	document.feedback.fid.value = fid;
+}
+LoadCommets(1);
+</script><!-- //评论内容区结束 -->
+
+</div><!-- //左边内容结束 -->
+
+<!-- //右边内容开始 -->
+<div class="pright">
+ 		
+		<div class="commend mt1">
+			<dl class="tbox light">
+				<dt class='light'><strong>推荐内容</strong></dt>
+				<dd class='light'>
+					<ul class="d4">
+           <li><a href="http://www.rosoo.net/a/201211/16372.html">H.264代码与标准如何对应</a>
+            	<p>有了这个实际的例子，切身的体验，再回头去看看我和别人以前总结的学习方法的帖子，相...</p>
+            </li>
+<li><a href="http://www.rosoo.net/a/201210/16298.html">ffmpeg的新东东:AVFilter</a>
+            	<p>利用ffmpeg做图像的pixel format转换你还在用libswscale吗?嘿嘿,过时啦!ffmpeg中有了...</p>
+            </li>
+<li><a href="http://www.rosoo.net/a/201209/16262.html">H.264 Profile、Level、Encoder三张简图</a>
+            	<p>想要说明H.264 HP与H.264 MP的区别就要讲到H.264的技术发展了。JVT于2003年完成H.264...</p>
+            </li>
+<li><a href="http://www.rosoo.net/a/201207/16135.html">ffmpeg的内部Video Buffer管理和传送机制</a>
+            	<p>本文主要介绍ffmpeg解码器内部管理Video Buffer的原理和过程，ffmpeg的Videobuffer为...</p>
+            </li>
+<li><a href="http://www.rosoo.net/a/201205/15985.html">H．264解码器中CAVLC码表查找算法的分析与优</a>
+            	<p>CAVLC是一种可变长编码，它根据已编码语法元素的情况动态调整编码中使用的码表，在编...</p>
+            </li>
+<li><a href="http://www.rosoo.net/a/201203/15789.html">MPEG1和MPEG2码流结构分析</a>
+            	<p>开始测试MPEG1和MPEG2码流的解码了，同样，对这两种码流也进行一下简单的分析，通过搜...</p>
+            </li>
+
+					</ul>
+				</dd>
+			</dl>
+		</div><!-- /commend -->
+
+		<div class="hot mt1">
+<script language='javascript' src='http://www.rosoo.net/ad/js_ad_250x250_100.js'></script>
+		</div>
+
+		<div class="hot mt1">
+			<dl class="tbox light">
+				<dt class='light'><strong>热点内容</strong></dt>
+				<dd class='light'>
+					<ul class="c1 ico2">
+             <li><a href="http://www.rosoo.net/a/200908/7423.html">x264编码详细文字全过程</a></li>
+<li><a href="http://www.rosoo.net/a/201006/9659.html">利用ffmpeg来进行视频解码的完整</a></li>
+<li><a href="http://www.rosoo.net/a/200909/7452.html">H.264 SPS结构体内成员意义及用</a></li>
+<li><a href="http://www.rosoo.net/a/200801/6878.html">h.264 视频解码的一点小经验(ffm</a></li>
+<li><a href="http://www.rosoo.net/a/200911/7621.html">H．264 NAL格式及分析器程序源代</a></li>
+<li><a href="http://www.rosoo.net/a/200911/7591.html">H.264编解码相关专题</a></li>
+<li><a href="http://www.rosoo.net/a/200908/7424.html">x264源代码分析（H.264乐园供稿</a></li>
+<li><a href="http://www.rosoo.net/a/200909/7451.html">H.264码流结构的分析</a></li>
+<li><a href="http://www.rosoo.net/a/201001/8390.html">MVC学习的第一周小结-jmvc入门 </a></li>
+<li><a href="http://www.rosoo.net/a/200909/7483.html">调用Xvid编码器流程(基于xvid1.1</a></li>
+
+					</ul>
+				</dd>
+			</dl>
+		</div>
+	</div><!-- /pright -->
+</div>
+
+<!-- //二级子类下拉菜单，考虑SEO原因放置于底部  -->
+<script type='text/javascript' src='http://www.rosoo.net/images/js/dropdown.js'></script>
+<ul id="dropmenu1" class="dropMenu">
+    <li><a href="http://www.rosoo.net/a/list_44_1.html">业界动态</a></li>
+    <li><a href="http://www.rosoo.net/a/list_51_1.html">流媒体开发</a></li>
+    <li><a href="http://www.rosoo.net/a/list_46_1.html">规范及协议</a></li>
+    <li><a href="http://www.rosoo.net/a/list_48_1.html">技术方案</a></li>
+    <li><a href="http://www.rosoo.net/a/list_107_1.html">应用方案</a></li>
+    <li><a href="http://www.rosoo.net/a/list_50_1.html">大杂烩</a></li>
+  
+</ul><ul id="dropmenu106" class="dropMenu">
+    <li><a href="http://www.rosoo.net/a/list_53_1.html">音视频编解码</a></li>
+    <li><a href="http://www.rosoo.net/a/list_45_1.html">音视频播放</a></li>
+    <li><a href="http://www.rosoo.net/a/list_47_1.html">视频处理</a></li>
+  
+</ul><ul id="dropmenu33" class="dropMenu">
+    <li><a href="http://www.rosoo.net/a/list_34_1.html">固件驱动开发</a></li>
+    <li><a href="http://www.rosoo.net/a/list_37_1.html">Android</a></li>
+    <li><a href="http://www.rosoo.net/a/list_35_1.html">Windows CE</a></li>
+    <li><a href="http://www.rosoo.net/a/list_97_1.html">Apple平台开发</a></li>
+    <li><a href="http://www.rosoo.net/a/list_36_1.html">Symbian OS</a></li>
+    <li><a href="http://www.rosoo.net/a/list_38_1.html">手机应用综合</a></li>
+  
+</ul><ul id="dropmenu7" class="dropMenu">
+    <li><a href="http://www.rosoo.net/a/list_100_1.html">C/CPP专题</a></li>
+    <li><a href="http://www.rosoo.net/a/list_52_1.html">高性能服务器</a></li>
+    <li><a href="http://www.rosoo.net/a/list_49_1.html">Linux开发专题</a></li>
+    <li><a href="http://www.rosoo.net/a/list_19_1.html">数据库开发</a></li>
+    <li><a href="http://www.rosoo.net/a/list_40_1.html">UML,RUP,SCM</a></li>
+    <li><a href="http://www.rosoo.net/a/list_39_1.html">Soft.Eng</a></li>
+  
+</ul><ul id="dropmenu13" class="dropMenu">
+    <li><a href="http://www.rosoo.net/a/list_17_1.html">VC(MFC)</a></li>
+    <li><a href="http://www.rosoo.net/a/list_20_1.html">JAVA</a></li>
+    <li><a href="http://www.rosoo.net/a/list_16_1.html">Web</a></li>
+    <li><a href="http://www.rosoo.net/a/list_14_1.html">.NET(C#)</a></li>
+    <li><a href="http://www.rosoo.net/a/list_42_1.html">安装制作</a></li>
+    <li><a href="http://www.rosoo.net/a/list_15_1.html">PC常识</a></li>
+  
+</ul><ul id="dropmenu101" class="dropMenu">
+    <li><a href="http://www.rosoo.net/a/list_70_1.html">『经理人手册』</a></li>
+    <li><a href="http://www.rosoo.net/a/list_61_1.html">『管理及绩效』</a></li>
+    <li><a href="http://www.rosoo.net/a/list_63_1.html">『产品与营销』</a></li>
+    <li><a href="http://www.rosoo.net/a/list_65_1.html">『规章/合同』</a></li>
+  
+</ul><ul id="dropmenu95" class="dropMenu">
+    <li><a href="http://www.rosoo.net/a/list_28_1.html">IT旧闻</a></li>
+    <li><a href="http://www.rosoo.net/a/list_29_1.html">观察与评价</a></li>
+    <li><a href="http://www.rosoo.net/a/list_31_1.html">IT过来人</a></li>
+    <li><a href="http://www.rosoo.net/a/list_32_1.html">职场+职业</a></li>
+    <li><a href="http://www.rosoo.net/a/list_41_1.html">架构与思路</a></li>
+    <li><a href="http://www.rosoo.net/a/list_43_1.html">啰嗦IT</a></li>
+  
+</ul><ul id="dropmenu8" class="dropMenu">
+    <li><a href="http://www.rosoo.net/a/list_21_1.html">软硬解决方案</a></li>
+    <li><a href="http://rg4.net">实验室小作品</a></li>
+    <li><a href="http://www.rosoo.net/a/list_22_1.html">音视频工具包</a></li>
+    <li><a href="http://www.rosoo.net/a/list_103_1.html">工具软件</a></li>
+    <li><a href="http://www.rosoo.net/a/list_102_1.html">其他杂项</a></li>
+    <li><a href="http://www.rosoo.net/a/list_24_1.html">游戏修改器</a></li>
+    <li><a href="http://www.rosoo.net/a/list_27_1.html">吉他谱</a></li>
+  
+</ul>
+<script type="text/javascript">cssdropdown.startchrome("navMenu")</script>
+
+<!-- //底部模板 -->
+<br/>
+
+
+<!--PAGE BOTTOM START-->
+<div class="footer w960 center mt1 clear">
+<table align='center' width='938' border='1' cellpadding='0' cellspacing='0' bordercolor='#B5CFFF' style='border-collapse:collapse '>
+<tr><td colspan='2'>
+<script language='javascript' src='/js/catalog.js'></script>
+</td></tr>
+</table>
+<table align='center' width='938'>
+<tr>
+<td align='center'>
+<script src='/ad/js_ad_728x90_101.js'></script>
+</td></tr>
+<tr align='center'>
+<td><br/>
+<script src='/js/some.rights.reserved.js'></script>
+<br/>
+<script type='text/javascript' src='/js/stat.php?type=0'></script>
+</td></tr>
+</table>
+<br/>
+</div>
+<!--PAGE BOTTOM END-->
+
+<!-- /footer -->
+
+<script src="http://www.rosoo.net/js/rs_bottom.js" type="text/javascript"></script>
+
+</body>
+</html>
