@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical" >
+
+	<com.tiny.chat.view.PullRefreshListView
+		android:id="@+id/friend_list"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:cacheColorHint="@color/transparent"
+		android:divider="@null"
+		android:fadingEdge="none"
+		android:listSelector="@drawable/list_selector_transition" >
+	</com.tiny.chat.view.PullRefreshListView>
+
+	<!-- Here is the view to show if the list is emtpy -->
+	<TextView
+		android:id="@+id/friend_empty"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:layout_gravity="center"
+		android:layout_marginTop="50dp"
+		android:background="@color/bg_gray"
+		android:text="重新获取数据" />
+
+</LinearLayout>
