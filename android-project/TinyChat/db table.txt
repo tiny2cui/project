@@ -1,0 +1,207 @@
+eg. 参考以下sql语句可以完成大部分查询需求
+
+每一位演员出演过的电影
+select A.strActor,movie.c00 from actors A 
+      LEFT JOIN actorlinkmovie AV ON A.idActor=AV.idActor
+	  LEFT JOIN movie M ON M.idMovie=AV.idMovie
+	  
+	  
+	  
+某某演员出演过的电影
+select M.c00 from movie M 
+      LEFT JOIN actorlinkmovie AV ON M.idMovie=AV.idMovie
+	  LEFT JOIN actors A ON A.idActor=AV.idActor
+	  where A.strActor=某某
+	  
+	  
+Movie
+Column Name	 Data Type	 Description
+
+idMovie	     integer	 Primary Key
+c00	         text	     Local Movie Title
+c01	         text	     Movie Plot
+c02	         text	     Movie Plot Outline
+c03	         text	     Movie Tagline
+c04	         text	     Rating Votes
+c05	         text	     Rating
+c06	         text	     Writers
+c07	         text	     Year Released
+c08	         text	     Thumbnails
+c09	         text	     IMDB ID
+c10	         text	     Title formatted for sorting
+c11	         text	     Runtime [UPnP devices see this as seconds]
+c12	         text	     MPAA Rating
+c13	         text	     [unknown - listed as Top250] 
+c14	         text	     Genre
+c15	         text	     Director
+c16	         text	     Original Movie Title
+c17	         text	     [unknown - listed as Thumbnail URL Spoof]
+c18	         text	     Studio
+c19	         text	     Trailer URL
+c20	         text	     Fanart URLs
+c21	         text	     Country (Added in r29886[1]
+idVideo      text        web 上的video id
+idFile	     integer	 Foreign Key to files table
+
+
+
+private static final String Local_Movie_Title = "c00"
+"select" + Local_Movie_Title +"from movie"  == select c00 from movie
+
+*******************************************************
+files
+This table stores filenames and links the path.
+
+Column Name	 Data Type	 Description
+
+idFile	     integer	 Primary Key
+strPath	     text	     Path URL
+strContent	 text	     Type of content (tvshows, movies, etc...)
+strFilename	 text	     Full name of file including extension
+playCount	 integer	 
+lastPlayed	 text        breakpoint
+lastPlayTime text	     last play time
+
+
+trigger
+
+CREATE TRIGGER insert_files AFTER INSERT ON files 
+BEGIN 
+insert into movie(c00,c01,c02,c03,c04,c05,c06,c07,c08,c09,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,idFile)
+ values((select strFileName from files where idFile=last_insert_rowid()),'','','','','','',0,'','','','','','','','','','','','','','',last_insert_rowid()); 
+END
+
+***********************************************************
+
+path (废弃 strPath 和 strContent放到files表)
+This table stores path information.
+
+Column Name	         Data Type	 Description
+
+idPath	             integer	 Primary Key
+strPath	             text	     Path URL
+strContent	         text	     Type of content (tvshows, movies, etc...)
+strScraper	         text	     XML file of scraper used for this path (X)
+strHash	             text	     Hash                    (X)
+scanRecursive	     integer	 Recursive scan setting  (X)
+useFolderNames	     bool	     User folder names setting  (X)
+strSettings	         text	     Custom settings used by scraper (X)
+
+*********************************************************
+genre
+This table stores genre information. For convenience the contents are duplicated in movie and tvshow, so a join isn't necessary.
+
+Column Name	 Data Type	 Description
+
+idGenre	     integer	 Primary Key
+strGenre	 text	     Genre label
+
+********************************************************
+
+genrelinkmovie
+This table links genres to movies. (The contents are also stored in movies.c14, though.)
+
+Column Name	 Data Type	 Description
+
+idGenre	     integer	 Foreign key to genre table
+idMovie	     integer	 Foreign key to movie table
+
+********************************************************
+
+actors
+This table stores actor, artist, director, and writer information.
+
+Column Name	 Data Type	 Description
+idActor	     integer	 Primary Key
+strActor	 text	     Name of the actor, artist, director, or writer
+strThumb	 text	     Thumbnail URL
+idNet        text        Net Id of this actor
+
+
+********************************************************
+
+actorlinkmovie
+This table links actors to movies and stores role information.
+
+Column Name	 Data Type	 Description
+idActor	     integer	 Foreign key to actors table
+idMovie	     integer	 Foreign key to movie table
+strRole	     text	     Role the actor played in this movie
+
+
+
+****************************************************
+
+shareserver
+This table stores local server info(FTP,SMB,FabStream)
+
+Column Name	 Data Type	 Description
+idServer     integer     
+strName      text        Server name
+strType      text        ftb smb upnp
+strIP        text
+port         Integer
+domain       text
+username     text
+password     text
+accessPath   text        default access path
+
+********************************************************
+
+settings
+
+暂留白
+
+******************************************************
+
+album
+This table stores pictures folder on the server。
+
+Column Name	   Data Type	 Description
+idAlbum        integer
+strUrl         text
+strName        text
+idServer       integer       Foreign key to shareserver table
+
+*****************************************************
+
+playtime (废弃)
+This table stores the playing time of the movie is not finished playing and movieID
+
+Column Name	   Data Type	 Description
+
+idPlaytime     integer
+playTime       integer
+
+
+
+playtimelinkmovie  (废弃)
+
+Column Name	   Data Type	 Description
+
+idPlaytime	   integer	     Foreign key to play table
+idMovie	       integer	     Foreign key to movie table
+
+**********************************************************
+
+downloading
+This table stores the download file.
+
+Column Name	     Data Type	 Description
+
+idDownLoad       integer       Primary Key
+strFileName      text         file absolute path
+strPath          text
+downloadLength   integer
+isFinish         boolean     default false     
+
+**********************************************************
+PS 
+设置模块还没有完全设置好，先不建表
+设置加一个手动清除
+ 
+
+
+
+
+

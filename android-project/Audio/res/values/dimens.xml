@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 自定义控件大小 -->
+    <dimen name="default_radius">4dp</dimen>
+    <dimen name="hover_width">38dp</dimen>
+    <dimen name="hover_height">40dp</dimen>
+    <!-- 边距大小 -->
+    <dimen name="margin_s1">7dp</dimen>
+    <dimen name="margin">10dp</dimen>
+    <dimen name="margin_b1">13dp</dimen>
+    <dimen name="margin_b2">16dp</dimen>
+    <dimen name="margin_b3">19dp</dimen>
+    <dimen name="margin_b4">22dp</dimen>
+    <!-- 字体大小 -->
+    <dimen name="text_size_s2">8dp</dimen>
+    <dimen name="text_size_s1">10dp</dimen>
+    <dimen name="text_size">12dp</dimen>
+    <dimen name="text_size_b1">14dp</dimen>
+    <dimen name="text_size_b2">16dp</dimen>
+    <dimen name="text_size_b3">18dp</dimen>
+
+    <!-- 控件大小 -->
+    <dimen name="line_width">1dp</dimen>
+    <dimen name="line_height">30dp</dimen>
+    <dimen name="probar_size">24dp</dimen>
+
+</resources>

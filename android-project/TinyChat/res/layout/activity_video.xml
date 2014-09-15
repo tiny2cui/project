@@ -1,0 +1,71 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <SurfaceView
+        android:id="@+id/surface_local"
+        android:layout_width="176dip"
+        android:layout_height="144dip"
+        />
+
+    <SurfaceView
+        android:id="@+id/surface_remote"
+        android:layout_width="500dip"
+        android:layout_height="400dip"
+        android:layout_centerHorizontal="true" 
+        />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="500dp"
+        android:layout_centerInParent="true" >
+
+        <TextView
+            android:id="@+id/tv_video_prompt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:gravity="center"
+            android:text="正在进行语音通话。。。" />
+
+        <Button
+            android:id="@+id/btn_video"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+            android:gravity="center"
+            android:text="挂断" />
+
+        <LinearLayout
+            android:id="@+id/ll_answer_refuses_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="25dp"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btn_answer_video"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="接听" />
+
+            <Button
+                android:id="@+id/btn_refuses_video"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:gravity="center"
+                android:text="拒绝" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
