@@ -451,6 +451,8 @@ public class VideoActivity extends Activity implements OnClickListener,
 		
 		UDPSocketService.getInstance().postMessage(sendData);
 
+		
+		//text
 	}
 
 	// private void receive(byte[] data, int dataLen, String ip) {
