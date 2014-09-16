@@ -17,6 +17,7 @@ import com.simit.net.domain.FriendIpRecord;
 import com.simit.net.domain.NetType;
 import com.simit.net.task.ReceivedDataThread;
 import com.simit.net.utils.Constants;
+import com.simit.net.utils.FrameType;
 import com.simit.net.utils.MyLog;
 import com.simit.net.utils.PackageFactory;
 
@@ -52,6 +53,7 @@ public class PrivateExternalNet implements IExternalNet {
 			udpSendSocket = new DatagramSocket();
 			udpRecvSocket = new DatagramSocket(Constants.LISTEN_PORT);
 			listenPortThread = new ListenPortThread();
+			listenPortThread.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception ex) {
@@ -64,8 +66,9 @@ public class PrivateExternalNet implements IExternalNet {
 		// TODO Auto-generated method stub
 		if (listenPortThread == null) {
 			listenPortThread = new ListenPortThread();
+			listenPortThread.start();
 		}
-		listenPortThread.start();
+		
 		new AsyncTask<Void, Void, Void>() {
 			@Override
 			protected Void doInBackground(Void... params) {
@@ -83,8 +86,8 @@ public class PrivateExternalNet implements IExternalNet {
 				context.sendBroadcast(intent);
 				
 				//获取在线好友列表
-//				frameByte = PackageFactory.packNotification(app.getLocalProperty().getDeveiceId(), 0,FrameType.LAN_FRIEND_LIST_REQUEST);
-//				sendOut(frameByte, frameByte.length,Constants.BROABCAST_ADDRESS);
+				frameByte = PackageFactory.packNotification(app.getLocalProperty().getDeveiceId(), 0,FrameType.LAN_FRIEND_LIST_REQUEST);
+				sendOut(frameByte, frameByte.length,Constants.BROABCAST_ADDRESS);
 				return null;
 			}
 

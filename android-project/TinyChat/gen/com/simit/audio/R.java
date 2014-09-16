@@ -46,7 +46,7 @@ public final class R {
 		public static final int xmlbtn_default = 0x7f020120;
 	}
 	public static final class id {
-		public static final int action_settings = 0x7f0d014c;
+		public static final int action_settings = 0x7f0d014d;
 		public static final int ip = 0x7f0d0007;
 		public static final int layout1 = 0x7f0d000a;
 		public static final int layout2 = 0x7f0d000c;

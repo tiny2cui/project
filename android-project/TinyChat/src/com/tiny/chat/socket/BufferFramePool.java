@@ -97,12 +97,20 @@ public class BufferFramePool extends Thread {
 			application.handleMessage(chatMessage);
 			messageId = TypeConvert.int2byte(message.getIdMessage());
 			System.arraycopy(messageId, 0, response, 0, 4);
-			response[4] = 0;
+			response[4] = 1;
 			responsePacket = new FramePacket(framePacket.getDestineID(),
 					framePacket.getSourceID(), FrameType.RESPONSE_MESSAGE,
 					response);
 			mUdpSocketService.postMessage(responsePacket.getFramePacket(),
 					responsePacket.getFramePacket().length);
+			break;
+			
+		case FrameType.RESPONSE_MESSAGE:
+			if (mDeviceId != framePacket.getDestineID()) {
+				return;
+			}
+			messageResponse(framePacket);
+			
 			break;
 		case FrameType.INFO_AUDIO: // 語音数据
 
@@ -268,7 +276,6 @@ public class BufferFramePool extends Thread {
 				people.getFriendInfo().setPosition(new Position(framePacket.getData()));
 			}
 			break;
-			
 
 		default:
 			break;
@@ -276,6 +283,23 @@ public class BufferFramePool extends Thread {
 
 	}
 
+	private void messageResponse(FramePacket framePacket){
+		byte[] infoBytes = framePacket.getData();
+		if(infoBytes==null || infoBytes.length!=5){
+			return;
+		}
+		byte[] idBytes = new byte[4];
+		System.arraycopy(infoBytes, 0, idBytes, 0, 4);
+		int messageId=TypeConvert.byte2int(idBytes);
+		SMSMessage message=dbOperate.getMessageById(messageId);
+		if(message!=null){
+			message.setMessageState(infoBytes[4]);
+			dbOperate.updateMessage(message);
+		}
+		
+		
+		
+	}
 	private void friendInfo(FramePacket framePacket) {
 		byte[] infoBytes = framePacket.getData();
 		if(infoBytes==null || infoBytes.length<40){

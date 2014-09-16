@@ -362,7 +362,7 @@ public class SettingFragment extends BaseFragment implements OnClickListener,
 		public void onReceive(Context context, Intent intent) {
 	           
 			if(Constant.INTERIOR_SERVER_START.equals(intent.getAction())){
-	        	   //服务器已经启动
+	          //服务器已经启动
 	          // Toast.makeText(getActivity(), "服务已经启动", Toast.LENGTH_SHORT).show();
 	           tvServerState.setText("启动状态：已开启");
 			}else if(Constant.INTERIOR_SERVER_START_FAIL.equals(intent.getAction())){

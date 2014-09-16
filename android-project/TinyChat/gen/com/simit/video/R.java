@@ -28,12 +28,12 @@ public final class R {
 		public static final int ic_launcher = 0x7f0200b5;
 	}
 	public static final class id {
-		public static final int do_play = 0x7f0d014a;
-		public static final int do_stop = 0x7f0d014b;
+		public static final int do_play = 0x7f0d014b;
+		public static final int do_stop = 0x7f0d014c;
 		public static final int ip = 0x7f0d0007;
-		public static final int option = 0x7f0d0149;
-		public static final int surface_local = 0x7f0d0054;
-		public static final int surface_remote = 0x7f0d0055;
+		public static final int option = 0x7f0d014a;
+		public static final int surface_local = 0x7f0d0055;
+		public static final int surface_remote = 0x7f0d0056;
 	}
 	public static final class layout {
 		public static final int activity_video = 0x7f03000f;

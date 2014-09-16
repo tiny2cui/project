@@ -38,6 +38,10 @@ public class DBOperate {
 		return messageDao.findMessagesByDeviceId(id);
 	}
 	
+	public SMSMessage getMessageById(Integer id){
+		return messageDao.findByID(id);
+	}
+	
 	
 	
 }

@@ -66,7 +66,7 @@ OnItemClickListener ,IChatMessageHandler{
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		mApplication.registerMessageHandler(this);
+		mApplication.unRegisterMessageHandler(this);
 	}
 	@Override
 	protected void initViews() {

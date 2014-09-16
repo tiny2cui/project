@@ -6,8 +6,12 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
+
 import android.util.Log;
+
 import com.simit.net.NetConfig;
 import com.simit.net.domain.Client;
 import com.simit.net.domain.ClientTypeRecord;
@@ -230,15 +234,23 @@ public class InternalUDPServiceThread {
 			/*
 			 * 检查是否已经在网，如果不在网络，就连接到网络（公网或者专网）
 			 */
-			LocalProperty localProperty = NetConfig.getInstance()
-					.getLocalProperty();
-			// 服务器处于离线状态需重新登录
-			if (localProperty.getNetType() == NetType.OFFLINE) {
-				netService.GetExternalNet().login(netService.getApplicationContext());
-			}
+			LocalProperty localProperty = NetConfig.getInstance().getLocalProperty();
+//			// 服务器处于离线状态需重新登录
+//			if (localProperty.getNetType() == NetType.OFFLINE) {
+//				netService.GetExternalNet().login(netService.getApplicationContext());
+//			}
 			// 返回客户端，告知注册结果，并将自己的ID返回给客户端
 			ClientRegisterResponse(framePacket,true, localProperty.getDeveiceId());
 
+			//一秒后启动登录
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					netService.GetExternalNet().login(netService.getApplicationContext());
+				}
+			}, 1000);;
+			
+		
 		}
 
 		/**

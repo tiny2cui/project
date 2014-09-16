@@ -33,7 +33,7 @@ public class InfoActivity extends BaseActivity implements OnClickListener {
 	private CheckBox ckText, ckFile, ckVoice, ckVideo, ckSensor;
 	private TextView tvDeviceId,tvNetState;
 //	private boolean text,file,voice,video,sensor;
-	private Button mBtnBack,mBtnNext,mBtnSendMessage;
+	private Button mBtnBack,mBtnNext,mBtnSendMessage,mBtnPosition;
 	private int mAvatar;
 	private String mNickname = "tiny";
 	private FriendInfo friendInfo;
@@ -69,6 +69,7 @@ public class InfoActivity extends BaseActivity implements OnClickListener {
 		mBtnBack = (Button) findViewById(R.id.setting_btn_back);
 		mBtnNext = (Button) findViewById(R.id.setting_btn_next);
 		mBtnSendMessage = (Button) findViewById(R.id.setting_btn_send_message);
+		mBtnPosition = (Button) findViewById(R.id.setting_btn_position);
 
 	}
 
@@ -181,6 +182,9 @@ public class InfoActivity extends BaseActivity implements OnClickListener {
 		case R.id.setting_my_avater_img:
 			// Intent intent = new Intent(this, ChooseAvatarActivity.class);
 			// startActivityForResult(intent, REQUEST_CODE);
+			break;
+		case R.id.setting_btn_position:
+			
 			break;
 		}
 

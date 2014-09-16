@@ -16,8 +16,10 @@ import com.tiny.chat.socket.FrameType;
 import com.tiny.chat.socket.OnActiveChatActivityListenner;
 import com.tiny.chat.socket.UDPSocketService;
 import com.tiny.chat.utils.AudioRecorderUtils;
+import com.tiny.chat.utils.ChatMessage;
 import com.tiny.chat.utils.DateUtils;
 import com.tiny.chat.utils.FileUtils;
+import com.tiny.chat.utils.IChatMessageHandler;
 import com.tiny.chat.utils.ImageUtils;
 import com.tiny.chat.utils.MyLog;
 import com.tiny.chat.utils.TypeConvert;
@@ -25,6 +27,7 @@ import com.tiny.chat.view.ChatListView;
 import com.tiny.chat.view.ScrollLayout;
 import com.tiny.chat.view.EmoteInputView;
 import com.tiny.chat.view.EmoticonsEditText;
+
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -49,7 +52,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ChatActivity extends BaseMessageActivity implements OnActiveChatActivityListenner {
+public class ChatActivity extends BaseMessageActivity implements OnActiveChatActivityListenner ,IChatMessageHandler{
 
     private static final String TAG = "SZU_ChatActivity";
 
@@ -71,6 +74,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     @Override
     protected void onResume() {
         super.onResume();
+        BaseApplication.getInstance().registerMessageHandler(this);
     }
 
     // 监听返回键
@@ -101,6 +105,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        BaseApplication.getInstance().unRegisterMessageHandler(this);
     }
 
     @Override
@@ -212,7 +217,8 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
 				
 				if(result!=null && result.size()>0){
 					mList.clear();
-					mAdapter.addList(result, true);
+					mAdapter.setList(result, true);
+					mClvList.setSelection(result.size());
 					
 				}
 				
@@ -256,7 +262,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+        switch (v.getId()) { 
             case R.id.chat_textditor_ib_plus:
                 if (!mLayoutMessagePlusBar.isShown()) {
                     showPlusBar();
@@ -287,7 +293,8 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                 if (!TextUtils.isEmpty(content)) {
                     mEetTextDitorEditer.setText(null);
                     sendMessage(content, FrameType.INFO_MESSAGE);
-//                    refreshAdapter();
+                    loadMessage();
+                    //                    refreshAdapter();
                 }
                 break;
 
@@ -852,5 +859,14 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
             Toast.makeText(ChatActivity.this, "缺少文件管理器", Toast.LENGTH_SHORT).show();
         }
     }
+
+	@Override
+	public void handlerMessage(ChatMessage message) {
+		// TODO Auto-generated method stub
+		if(ChatMessage.MESSAGE_TEXT_DATA.equals(message.getMessageId())){
+			loadMessage();
+		}
+		
+	}
 
 }

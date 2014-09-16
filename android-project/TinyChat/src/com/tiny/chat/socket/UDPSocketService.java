@@ -136,6 +136,12 @@ public class UDPSocketService extends Thread implements Runnable{
 		syncSend.release();
 		}
 	
+	public void postMessage(SendData sendData){		
+		sendDatas.add(sendData);
+		
+		syncSend.release();
+	}  
+	
 	//停止网络接受与发送数据服务
 	public void stopService(){
 		if(sendThread!=null){

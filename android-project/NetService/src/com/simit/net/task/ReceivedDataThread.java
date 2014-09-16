@@ -164,7 +164,10 @@ public class ReceivedDataThread extends Thread {
 		if(recodeRecord!=null){
 			Client client=recodeRecord.getClient(clientType);
 			byte[] data=framePacket.getFramePacket();
-			send2Client(data, data.length, client.getIp(), client.getPort());
+			if(client!=null){
+				send2Client(data, data.length, client.getIp(), client.getPort());
+			}
+			
 		}
 	}
 	

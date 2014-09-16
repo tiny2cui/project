@@ -18,6 +18,7 @@ import com.simit.video.test.FramePacket;
 import com.simit.video.test.SendAndReceive;
 import com.tiny.chat.BaseApplication;
 import com.tiny.chat.R;
+import com.tiny.chat.domain.SendData;
 import com.tiny.chat.socket.FrameType;
 import com.tiny.chat.socket.UDPSocketService;
 import com.tiny.chat.utils.ChatMessage;
@@ -80,8 +81,10 @@ public class VideoActivity extends Activity implements OnClickListener,
 	DatagramPacket sendPacket;
 	public static String DEVICE_ID = "device_id";
 	public static String VIDEO_STATE_ID = "video_state_id";
+	
 	public static int VIDEO_REQUEST = 1, VIDEO_WAIT = 2;
-	private int deviceId, videoState;
+	private int deviceId, videoState, videoPort, videoIp;
+	 
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -442,20 +445,11 @@ public class VideoActivity extends Activity implements OnClickListener,
 	@Override
 	public void sendData(byte[] data, int frameType) {
 
-		// FramePacket framePacket = new FramePacket(7, 8, frameType, data);
-		// sendPacket.setData(framePacket.getFramePacket());
-		// sendPacket.setLength(framePacket.getFramePacket().length);
-		// try {
-		// socket.send(sendPacket);
-		//
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-
 		FramePacket framePacket = new FramePacket(NetConfig.getInstance()
 				.getLocalProperty().getDeveiceId(), deviceId, frameType, data);
-		UDPSocketService.getInstance().postMessage(framePacket.getFramePacket(),framePacket.getFramePacket().length);
+		SendData sendData=new SendData(framePacket.getFramePacket(),framePacket.getFramePacket().length);
+		
+		UDPSocketService.getInstance().postMessage(sendData);
 
 	}
 
