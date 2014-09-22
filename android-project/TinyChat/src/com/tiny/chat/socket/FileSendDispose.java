@@ -3,11 +3,17 @@ package com.tiny.chat.socket;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+
 import com.tiny.chat.domain.FramePacket;
 import com.tiny.chat.utils.MyLog;
 import com.tiny.chat.utils.TypeConvert;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.HandlerThread;
 
@@ -26,6 +32,7 @@ public class FileSendDispose {
 		HandlerThread handlerThread = new HandlerThread("sendFile");
 		handlerThread.start();
 		mHandler = new Handler(handlerThread.getLooper());
+		
 	}
 
 	public void postFilePath(final String path, final int sourceId,final int destineId) {
@@ -47,6 +54,7 @@ public class FileSendDispose {
 		System.arraycopy(idBytes, 0, buffer, 0, 4);
 		int size = -1;
 		InputStream inputStream = null;
+//		OutputStream outputStream=null;
 		byte[] pathBytes=file.getName().getBytes();
 		System.arraycopy(pathBytes, 0, buffer, 4, pathBytes.length);
 		FramePacket framePacket = new FramePacket(sourceId, destineId,
@@ -54,6 +62,7 @@ public class FileSendDispose {
 		UDPSocketService.getInstance().postMessage(framePacket.getFramePacket(),framePacket.getFramePacket().length);
 		try {
 			inputStream = new FileInputStream(file);
+//			outputStream = new FileOutputStream(new File("sdcard/test.ppt"));
 			int i=1;
 			while ((size = inputStream.read(buffer, 4, SIZE - 4)) != -1) {
 				if(i==255){
@@ -63,11 +72,13 @@ public class FileSendDispose {
 				framePacket.setFrameType(FrameType.INFO_FILE);
 				framePacket.setFrameSourceID(sourceId);
 				framePacket.setFrameDestineID(destineId);
-				framePacket.setFrameData(buffer, size);
+				framePacket.setFrameData(buffer, size+4);
 				framePacket.setFrameSerialNo(i);
 				framePacket.packageItemsToFrame();
 				MyLog.i("file-->send", "file--"+i+"-->len-"+size);//+new String(framePacket.getFramePacket()).toString());
 				UDPSocketService.getInstance().postMessage(framePacket.getFramePacket(),framePacket.getFramePacket().length);
+//				outputStream.write(buffer, 4, size);
+//				outputStream.flush();
 				i++;
 			}
 			framePacket = new FramePacket();
@@ -87,6 +98,7 @@ public class FileSendDispose {
 			if (inputStream != null) {
 				try {
 					inputStream.close();
+//					outputStream.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

@@ -5,9 +5,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.nio.ByteBuffer;
 
-import com.simit.audio.task.AudioDecoderThread;
-import com.simit.audio.task.AudioRecorderThread;
 import com.simit.net.NetConfig;
+import com.simit.net.utils.IPv4Util;
 import com.simit.video.client.Rtspclient;
 import com.simit.video.rtspclient.concepts.ClientResponse;
 import com.simit.video.rtspclient.concepts.Request.Method;
@@ -20,13 +19,12 @@ import com.tiny.chat.BaseApplication;
 import com.tiny.chat.R;
 import com.tiny.chat.domain.SendData;
 import com.tiny.chat.socket.FrameType;
+import com.tiny.chat.socket.MessageConstant;
 import com.tiny.chat.socket.UDPSocketService;
 import com.tiny.chat.utils.ChatMessage;
 import com.tiny.chat.utils.IChatMessageHandler;
 import com.tiny.chat.utils.MyLog;
 
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -84,7 +82,7 @@ public class VideoActivity extends Activity implements OnClickListener,
 	
 	public static int VIDEO_REQUEST = 1, VIDEO_WAIT = 2;
 	private int deviceId, videoState, videoPort, videoIp;
-	 
+	private String obtainIp;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -140,6 +138,12 @@ public class VideoActivity extends Activity implements OnClickListener,
 		
 		deviceId = getIntent().getIntExtra(DEVICE_ID, 0);
 		videoState = getIntent().getIntExtra(VIDEO_STATE_ID, 0);
+		if(deviceId!=0){
+			int ip=BaseApplication.getInstance().getOnlineUsers().get(deviceId).getFriendInfo().getIp();
+			obtainIp=IPv4Util.intToIp(ip);	
+		}
+		
+		MyLog.i(TAG, "ip-->"+obtainIp);
 		
 		
 		
@@ -154,7 +158,7 @@ public class VideoActivity extends Activity implements OnClickListener,
 		btnVideo.setVisibility(View.VISIBLE);
 		btnVideo.setText("取消");
 		byte[] data=new byte[1];
-		sendData(data, FrameType.MESSAGE_VIDEO_CONTROL_START);
+		sendFrame(data, FrameType.MESSAGE_VIDEO_CONTROL_START);
 	}
 	
 	/**
@@ -162,7 +166,7 @@ public class VideoActivity extends Activity implements OnClickListener,
 	 */
 	private void refuseVideo(){
 		tvVideoPromp.setText("已拒绝与对方通话。。。");
-		sendData(new byte[1], FrameType.MESSAGE_VIDEO_CONTROL_REFUSES);
+		sendFrame(new byte[1], FrameType.MESSAGE_VIDEO_CONTROL_REFUSES);
 	}
 	
 	/**
@@ -171,7 +175,8 @@ public class VideoActivity extends Activity implements OnClickListener,
 	private void answerVideo(){
 		// 接收到对方请求通话命令 1：启动语音编码 2：启动解码器接收数据
 		MyLog.i(TAG, ChatMessage.MESSAGE_VIDEO_CONTROL_PLAY);
-		sendData(new byte[1], FrameType.MESSAGE_VIDEO_CONTROL_PLAY);
+		sendFrame(new byte[1], FrameType.MESSAGE_VIDEO_CONTROL_PLAY);
+		UDPSocketService.getInstance().startVideoThread(); 
 		optionLayout.setVisibility(View.GONE);
 		btnVideo.setVisibility(View.VISIBLE);
 		btnVideo.setText("挂断");
@@ -204,12 +209,13 @@ public class VideoActivity extends Activity implements OnClickListener,
 	// Step1 init parameters from sharepreference
 	void initParameters() {
 		settings = PreferenceManager.getDefaultSharedPreferences(this);
-		defaultVideoQuality.resX = settings.getInt("video_resX", 320);
-		defaultVideoQuality.resY = settings.getInt("video_resY", 240);
-		defaultVideoQuality.frameRate = Integer.parseInt(settings.getString(
-				"video_framerate", "15"));
-		defaultVideoQuality.bitRate = Integer.parseInt(settings.getString(
-				"video_bitrate", "500")) * 1000; // 500 kb/s
+		defaultVideoQuality.resX = settings.getInt("video_resX", 320);  //320
+		defaultVideoQuality.resY = settings.getInt("video_resY", 240);  //240
+//		defaultVideoQuality.frameRate = Integer.parseInt(settings.getString("video_framerate", "20"));//15
+//		defaultVideoQuality.bitRate = Integer.parseInt(settings.getString("video_bitrate", "1024")) * 1000; // 500 kb/s
+		
+		defaultVideoQuality.frameRate = 10;//15
+		defaultVideoQuality.bitRate = 800*1000; // 500 kb/s
 		s_uri = settings.getString("video_dst", "rtsp://192.168.0.2:8086/");
 		settings.registerOnSharedPreferenceChangeListener(this);
 
@@ -444,15 +450,23 @@ public class VideoActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void sendData(byte[] data, int frameType) {
-
 		FramePacket framePacket = new FramePacket(NetConfig.getInstance()
 				.getLocalProperty().getDeveiceId(), deviceId, frameType, data);
 		SendData sendData=new SendData(framePacket.getFramePacket(),framePacket.getFramePacket().length);
 		
+		if(obtainIp!=null){
+			sendData.setDestinationIP(obtainIp);
+		}
+		sendData.setDestinationPort(MessageConstant.DATA_PORT);
 		UDPSocketService.getInstance().postMessage(sendData);
 
+	}
+	
+	private void sendFrame(byte[] data, int frameType){
+		FramePacket framePacket = new FramePacket(NetConfig.getInstance()
+				.getLocalProperty().getDeveiceId(), deviceId, frameType, data);
+		UDPSocketService.getInstance().postMessage(framePacket.getFramePacket(),framePacket.getFramePacket().length);
 		
-		//text
 	}
 
 	// private void receive(byte[] data, int dataLen, String ip) {
@@ -552,25 +566,29 @@ public class VideoActivity extends Activity implements OnClickListener,
 		}
 
 		public void run() {
+			byte[] temp;
 			while (Thread.currentThread() == runner) {
 				// int temp = 0;
 				if (rtspClient.isStream()) {
 					if (rtspClient.getLVP().getDecoder().isGetData()) {
-						ByteBuffer buffer = ByteBuffer.wrap(rtspClient.getLVP()
-								.getDecoder().getData());
-						bitmap.copyPixelsFromBuffer(buffer);
-						Bitmap bmp = Bitmap.createScaledBitmap(bitmap,
-								Surface_width, Surface_height, false);
+						temp=rtspClient.getLVP().getDecoder().getData();
+						if(temp!=null ){
+							ByteBuffer buffer = ByteBuffer.wrap(temp);
+							bitmap.copyPixelsFromBuffer(buffer);
+							Bitmap bmp = Bitmap.createScaledBitmap(bitmap,
+									Surface_width, Surface_height, false);
 
-						// if((temp%20)==0){
-						// saveBitmap(bmp,null,"pic"+temp,CompressFormat.JPEG);
-						// }
-						// temp++;
-
-						canvas = sfh.lockCanvas(new Rect(0, 0, Surface_width,
-								Surface_height));
-						canvas.drawBitmap(bmp, 0, 0, new Paint());
-						sfh.unlockCanvasAndPost(canvas);
+							canvas = sfh.lockCanvas(new Rect(0, 0, Surface_width,
+										Surface_height));
+							if(bitmap!=null){
+								canvas.drawBitmap(bmp, 0, 0, new Paint());
+								sfh.unlockCanvasAndPost(canvas);
+							}
+							
+						}
+						
+						
+						
 
 					}
 				}
@@ -636,10 +654,11 @@ public class VideoActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void handlerMessage(ChatMessage message) {
-		if (ChatMessage.MESSAGE_VIDEO_CONTROL_PLAY.equals(message
-				.getMessageId())) {
+		if (ChatMessage.MESSAGE_VIDEO_CONTROL_PLAY.equals(message.getMessageId())) {
 			// 接收到对方请求通话命令 1：启动语音编码 2：启动解码器接收数据
 			MyLog.i(TAG, ChatMessage.MESSAGE_VIDEO_CONTROL_PLAY);
+			
+			UDPSocketService.getInstance().startVideoThread(); 
 			rtspClient.do_option("*");
 			mDraw_Image.startThread();
 		}else if (ChatMessage.MESSAGE_VIDEO_CONTROL_REFUSES.equals(message

@@ -261,7 +261,6 @@ public class MainTabActivity extends FragmentActivity implements
 				try {
 
 					//
-
 					return true;
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -270,6 +270,7 @@ public class BaseApplication extends Application {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra(VideoActivity.DEVICE_ID, deviceId);
 		intent.putExtra(VideoActivity.VIDEO_STATE_ID, state);
+		
 		startActivity(intent);
 	}
 	public People getmUser() {

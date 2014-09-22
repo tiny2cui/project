@@ -15,20 +15,20 @@ public final class R {
 		public static final int ic_launcher = 0x7f0200b5;
 	}
 	public static final class id {
-		public static final int action_settings = 0x7f0d014d;
-		public static final int button_setup = 0x7f0d0039;
-		public static final int button_start = 0x7f0d0030;
-		public static final int button_stop = 0x7f0d0031;
-		public static final int deveice_id = 0x7f0d0036;
-		public static final int info = 0x7f0d0032;
-		public static final int radio_INTENET = 0x7f0d0038;
-		public static final int radio_WSN = 0x7f0d0037;
-		public static final int user_id = 0x7f0d0034;
-		public static final int user_name = 0x7f0d0033;
-		public static final int user_password = 0x7f0d0035;
+		public static final int action_settings = 0x7f0d014e;
+		public static final int button_setup = 0x7f0d003a;
+		public static final int button_start = 0x7f0d0031;
+		public static final int button_stop = 0x7f0d0032;
+		public static final int deveice_id = 0x7f0d0037;
+		public static final int info = 0x7f0d0033;
+		public static final int radio_INTENET = 0x7f0d0039;
+		public static final int radio_WSN = 0x7f0d0038;
+		public static final int user_id = 0x7f0d0035;
+		public static final int user_name = 0x7f0d0034;
+		public static final int user_password = 0x7f0d0036;
 	}
 	public static final class layout {
-		public static final int activity_main = 0x7f030007;
+		public static final int activity_main = 0x7f030008;
 	}
 	public static final class menu {
 		public static final int main = 0x7f0c0002;

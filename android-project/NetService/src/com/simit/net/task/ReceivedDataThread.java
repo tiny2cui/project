@@ -66,7 +66,6 @@ public class ReceivedDataThread extends Thread {
 				e.printStackTrace();
 			}
 			if(framePackets!=null && framePackets.size()>0){
-				
 				framePacket = framePackets.remove(0);
 				if(framePacket.getSourceID()!=NetConfig.getInstance().getLocalProperty().getDeveiceId()){
 					int frameType = framePacket.getFrameType();

@@ -46,17 +46,17 @@ public final class R {
 		public static final int xmlbtn_default = 0x7f020120;
 	}
 	public static final class id {
-		public static final int action_settings = 0x7f0d014d;
-		public static final int ip = 0x7f0d0007;
-		public static final int layout1 = 0x7f0d000a;
-		public static final int layout2 = 0x7f0d000c;
-		public static final int layout3 = 0x7f0d000b;
-		public static final int layout4 = 0x7f0d000d;
-		public static final int other_ip = 0x7f0d0008;
-		public static final int setting = 0x7f0d0009;
+		public static final int action_settings = 0x7f0d014e;
+		public static final int ip = 0x7f0d0008;
+		public static final int layout1 = 0x7f0d000b;
+		public static final int layout2 = 0x7f0d000d;
+		public static final int layout3 = 0x7f0d000c;
+		public static final int layout4 = 0x7f0d000e;
+		public static final int other_ip = 0x7f0d0009;
+		public static final int setting = 0x7f0d000a;
 	}
 	public static final class layout {
-		public static final int activity_home = 0x7f030002;
+		public static final int activity_home = 0x7f030003;
 	}
 	public static final class menu {
 		public static final int homectivity = 0x7f0c0001;

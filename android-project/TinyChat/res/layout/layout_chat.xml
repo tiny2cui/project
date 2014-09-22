@@ -27,6 +27,9 @@
         android:background="@drawable/bg_chatbar_textmode"
         android:orientation="vertical" >
 
+        <!--  
+        <include layout="@layout/include_message_textditor" />
+        -->
         <com.tiny.chat.view.ScrollLayout
             android:id="@+id/chat_slayout_scroll"
             android:layout_width="fill_parent"
@@ -34,6 +37,7 @@
             <include layout="@layout/include_message_textditor" />
             <include layout="@layout/include_message_audioditor" />
         </com.tiny.chat.view.ScrollLayout>
+        
 
         <LinearLayout
             android:id="@+id/chat_layout_rounds"

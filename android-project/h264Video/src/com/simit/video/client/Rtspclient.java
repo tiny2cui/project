@@ -34,8 +34,8 @@ public class Rtspclient implements ClientListener
 	private int port=9009;
 	private int server_port;
 
-	private final int width = 320;
-	private final int height = 240;
+	private final int width = 320; //320
+	private final int height = 240; //240
 	private String str_SPS;
 	private String str_PPS;
 	private DatagramSocket udp_socket;

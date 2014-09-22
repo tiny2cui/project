@@ -50,23 +50,9 @@ public class FileReceiveDispose {
 					e.printStackTrace();
 				}
 			}
-		} else if (serial !=-1
-				&& (receiveFileSerial == serial - 1 || (serial == -128 && receiveFileSerial == 127) || serial == 1 && receiveFileSerial == -2 )) {
-			// 接收文件
-			MyLog.i("file-->receive2", "file--" + serial);
-			receiveFileSerial = serial;
-			if (outputStream != null && messageID == id) {
-				try {
-					//MyLog.i("file-->receive", "file--" + serial + "-->"+ new String(data).toString());
-					outputStream.write(data, 15, data.length - 16);
-					outputStream.flush();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-
-		} else if (serial == -1) {
+		} 
+		
+		else if (serial == -1) {
 			MyLog.i("file-->receive3", "file--" + serial);
 			// 文件发送结束
 			if (outputStream != null) {
@@ -92,21 +78,43 @@ public class FileReceiveDispose {
 //				}
 //			}
 			
-		} else {
-			// 文件接收结束或失败
-			MyLog.i("file-->receive", "file--" + serial);
-			receiveFileSerial = -1;
-			
+		}
+		else{
+//		else if (serial !=-1 && (receiveFileSerial == serial - 1 || (serial == -128 && receiveFileSerial == 127) || serial == 1 && receiveFileSerial == -2 )) {
+			// 接收文件
+			MyLog.i("file-->receive2", "file--" + serial);
+			receiveFileSerial = serial;
+//			if (outputStream != null && messageID == id) {
 			if (outputStream != null) {
+				
 				try {
-					outputStream.close();
+					//MyLog.i("file-->receive", "file--" + serial + "-->"+ new String(data).toString());
+					outputStream.write(data, 15, data.length - 16);
+					outputStream.flush();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				outputStream = null;
 			}
-		}
+
+		} 
+		
+//		else {
+//			// 文件接收结束或失败
+//			MyLog.i("file-->receive", "file--" + serial);
+//			receiveFileSerial = -1;
+//			
+//			if (outputStream != null) {
+//				try {
+//					outputStream.close();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				outputStream = null;
+//			}
+//		}
+		
 
 	}
 

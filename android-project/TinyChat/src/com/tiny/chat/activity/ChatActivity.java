@@ -152,7 +152,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
 
     @Override
     protected void initEvents() {
-        mLayoutScroll.setOnScrollToScreen(this);
+//        mLayoutScroll.setOnScrollToScreen(this);
         mIbTextDitorPlus.setOnClickListener(this);
         mIbTextDitorEmote.setOnClickListener(this);
         mIbTextDitorKeyBoard.setOnClickListener(this);
@@ -382,52 +382,52 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                 }
                 break;
 
-            case MotionEvent.ACTION_MOVE: // 滑动手指
-                float moveY = event.getY();
-                if (moveY - downY < -50) {
-                    isMove = true;
-                    showVoiceDialog(1);
-                }
-                else if (moveY - downY < -20) {
-                    isMove = false;
-                    showVoiceDialog(0);
-                }
-                break;
+//            case MotionEvent.ACTION_MOVE: // 滑动手指
+//                float moveY = event.getY();
+//                if (moveY - downY < -50) {
+//                    isMove = true;
+//                    showVoiceDialog(1);
+//                }
+//                else if (moveY - downY < -20) {
+//                    isMove = false;
+//                    showVoiceDialog(0);
+//                }
+//                break;
 
-            case MotionEvent.ACTION_UP: // 松开手指
-            	MyLog.i(TAG, "ACTION UP");
-                if (recordState == RECORD_ON) {
-                    recordState = RECORD_OFF;
-
-                    try {
-                        mRecordThread.interrupt();
-                        mRecordThread = null;
-                        mAudioRecorder.stop();
-                        voiceValue = 0.0;
-                    }
-                    catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-
-                    if (mRecordDialog.isShowing()) {
-                        mRecordDialog.dismiss();
-                    }
-
-                    if (!isMove) {
-                        if (recodeTime < MIN_RECORD_TIME) {
-                            showWarnToast("时间太短  录音失败");
-                        }
-                        else {
-                            mVoicePath = mAudioRecorder.getVoicePath();
-//                            sendMessage(mVoicePath, CONTENT_TYPE.VOICE);
-                            refreshAdapter();
-                        }
-                    }
-
-                    isMove = false;
-                }
-                break;
+//            case MotionEvent.ACTION_UP: // 松开手指
+//            	MyLog.i(TAG, "ACTION UP");
+//                if (recordState == RECORD_ON) {
+//                    recordState = RECORD_OFF;
+//
+//                    try {
+//                        mRecordThread.interrupt();
+//                        mRecordThread = null;
+//                        mAudioRecorder.stop();
+//                        voiceValue = 0.0;
+//                    }
+//                    catch (IOException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
+//
+//                    if (mRecordDialog.isShowing()) {
+//                        mRecordDialog.dismiss();
+//                    }
+//
+//                    if (!isMove) {
+//                        if (recodeTime < MIN_RECORD_TIME) {
+//                            showWarnToast("时间太短  录音失败");
+//                        }
+//                        else {
+//                            mVoicePath = mAudioRecorder.getVoicePath();
+////                            sendMessage(mVoicePath, CONTENT_TYPE.VOICE);
+//                            refreshAdapter();
+//                        }
+//                    }
+//
+//                    isMove = false;
+//                }
+//                break;
 
         }
 
@@ -447,7 +447,8 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (TextUtils.isEmpty(s)) {
-            mIvTextDitorAudio.setVisibility(View.VISIBLE);
+//        	mIvTextDitorAudio.setVisibility(View.VISIBLE);
+        	mIvTextDitorAudio.setVisibility(View.GONE);
             mBtnTextDitorSend.setVisibility(View.GONE);
         }
         else {

@@ -118,6 +118,8 @@ public class ScrollLayout extends ViewGroup {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		
+		/*
 		if (mVelocityTracker == null) {
 			mVelocityTracker = VelocityTracker.obtain();
 		}
@@ -164,6 +166,7 @@ public class ScrollLayout extends ViewGroup {
 			mTouchState = TOUCH_STATE_REST;
 			break;
 		}
+		*/
 		return true;
 	}
 

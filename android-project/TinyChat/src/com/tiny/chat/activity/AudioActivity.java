@@ -216,8 +216,8 @@ public class AudioActivity extends FragmentActivity implements OnClickListener,
 //
 //		} else 
 		
-			if (ChatMessage.MESSAGE_AUDIO_CONTROL_PLAY.equals(message
-				.getMessageId())) {
+			if (ChatMessage.MESSAGE_AUDIO_CONTROL_PLAY.equals(message.getMessageId())) {
+				
 			// 接收到对方请求通话命令 1：启动语音编码 2：启动解码器接收数据
 			MyLog.i(TAG, ChatMessage.MESSAGE_AUDIO_CONTROL_PLAY);
 			if (audioRecorderThread == null) {
@@ -236,8 +236,7 @@ public class AudioActivity extends FragmentActivity implements OnClickListener,
 			}
 			decoderThread.startDecoding();
 			
-		}else if (ChatMessage.MESSAGE_AUDIO_CONTROL_REFUSES.equals(message
-				.getMessageId())) {
+		}else if (ChatMessage.MESSAGE_AUDIO_CONTROL_REFUSES.equals(message.getMessageId())) {
 			tvAudioPromp.setText("对方拒绝语音通话");
 			if (decoderThread == null) {
 				decoderThread = AudioDecoderThread.getInstance();
@@ -252,8 +251,7 @@ public class AudioActivity extends FragmentActivity implements OnClickListener,
 				}
 			},5000);
 			
-		}else if(ChatMessage.MESSAGE_AUDIO_CONTROL_STOP.equals(message
-				.getMessageId())) {
+		}else if(ChatMessage.MESSAGE_AUDIO_CONTROL_STOP.equals(message.getMessageId())) {
 			stopAudio("对方终止了语音通话");
 			
 		}

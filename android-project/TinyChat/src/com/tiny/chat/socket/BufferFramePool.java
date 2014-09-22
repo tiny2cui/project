@@ -1,6 +1,8 @@
 package com.tiny.chat.socket;
 
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import android.util.Log;
@@ -25,7 +27,7 @@ import com.tiny.chat.utils.TypeConvert;
 
 public class BufferFramePool extends Thread {
 	private static String TAG = "BufferFramePool";
-	private LinkedList<FramePacket> mListPackages = new LinkedList<FramePacket>();
+	private List<FramePacket> mListPackages = Collections.synchronizedList(new LinkedList<FramePacket>()) ;
 	private boolean isRunning;
 	private DBOperate dbOperate;
 	private Semaphore sync;
@@ -58,7 +60,7 @@ public class BufferFramePool extends Thread {
 		while (isRunning) {
 			try {
 				sync.acquire(1);
-				FramePacket packet = mListPackages.remove();
+				FramePacket packet = mListPackages.remove(0);
 				if (packet != null) {
 					disposeReceiveFrameData(packet);
 				}
@@ -143,8 +145,7 @@ public class BufferFramePool extends Thread {
 		case FrameType.LAN_LOGIN_BROADCAST: // 上線通知
 			People loginPeople = new People(framePacket.getSourceID());
 			application.addOnlineUsers(framePacket.getSourceID(), loginPeople);
-			chatMessage = new ChatMessage(
-					ChatMessage.MESSAGE_FRIEND_LOGIN_DATA, loginPeople);
+			chatMessage = new ChatMessage(ChatMessage.MESSAGE_FRIEND_LOGIN_DATA, loginPeople);
 			application.handleMessage(chatMessage);
 			// TODO 发送获取友邻资料、位置、环境等信息
 			FramePacket friendInfoPacket = new FramePacket(application.getDeviceID(), framePacket.getSourceID(),
@@ -228,6 +229,7 @@ public class BufferFramePool extends Thread {
 		case FrameType.MESSAGE_VIDEO_CONTROL_START:
 			application.reward2Video(framePacket.getSourceID(),
 					VideoActivity.VIDEO_WAIT);
+			
 			break;
 
 		case FrameType.MESSAGE_VIDEO_CONTROL_PLAY:
