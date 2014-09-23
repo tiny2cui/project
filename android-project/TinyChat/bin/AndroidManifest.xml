@@ -7,6 +7,7 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -27,13 +28,15 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
-     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-      <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-       <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" >
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <permission android:name="android.permission.BAIDU_LOCATION_SERVICE" >
     </permission>
 
     <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE" >
     </uses-permission>
+
     <application
         android:name="com.tiny.chat.BaseApplication"
         android:allowBackup="true"
@@ -43,38 +46,44 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="3BnyWghGhRFNwsVn2oeuPxKP" />
+
         <activity
             android:name="com.tiny.chat.activity.MainTabActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-         <activity
+        <activity
             android:name="com.tiny.chat.activity.ChatActivity"
             android:screenOrientation="portrait" />
-          <activity
+        <activity
             android:name="com.tiny.chat.activity.MapActivity"
             android:screenOrientation="portrait" />
-          <activity
+        <activity
             android:name="com.tiny.chat.activity.InfoActivity"
             android:screenOrientation="portrait" />
-          <activity
+        <activity
             android:name="com.tiny.chat.activity.AudioActivity"
             android:screenOrientation="portrait" />
-          
-           <activity
+        <activity
             android:name="com.tiny.chat.activity.VideoActivity"
-            android:screenOrientation="landscape"    />
-           <activity
+            android:screenOrientation="landscape" />
+        <activity
             android:name="com.tiny.chat.activity.ImageActivity"
             android:screenOrientation="portrait" />
-           
-           <service android:name="com.tiny.chat.service.MessageServer"></service>
-         <service android:name="com.simit.net.service.NetService"></service>
-          <service
+        <activity
+            android:name="com.tiny.chat.activity.ImageBrowserActivity"
+            android:screenOrientation="portrait" />
+
+        <service android:name="com.tiny.chat.service.MessageServer" >
+        </service>
+        <service android:name="com.simit.net.service.NetService" >
+        </service>
+        <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" >

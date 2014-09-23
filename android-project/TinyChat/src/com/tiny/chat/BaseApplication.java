@@ -1,5 +1,6 @@
 package com.tiny.chat;
 
+import java.io.File;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import com.tiny.chat.domain.Position;
 import com.tiny.chat.file.FileState;
 import com.tiny.chat.utils.ChatMessage;
 import com.tiny.chat.utils.Constant;
+import com.tiny.chat.utils.FileUtils;
 import com.tiny.chat.utils.IChatMessageHandler;
 
 import android.R.integer;
@@ -60,7 +62,7 @@ public class BaseApplication extends Application {
 	
 	// 本地图像、缩略图、声音、文件存储路径
 	public static String IMAG_PATH;
-	public static String THUMBNAIL_PATH;
+	public static String THUMBNAIL_PATH=FileUtils.getSDPath()+ File.separator+ "tinyChat"+File.separator+"thumbnail" +File.separator;
 	public static String VOICE_PATH;
 	public static String FILE_PATH;
 	public static String SAVE_PATH;

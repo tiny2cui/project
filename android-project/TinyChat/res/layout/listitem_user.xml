@@ -35,6 +35,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:visibility="gone"
             android:layout_toRightOf="@+id/user_item_layout_avatar"
             android:gravity="center_vertical"
             android:orientation="vertical" >
@@ -72,29 +73,21 @@
                         android:visibility="gone" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/user_item_htv_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/user_item_layout_icon"
-                    android:singleLine="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="17sp" />
+               
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginBottom="3dip"
+                android:visibility="gone"
                 android:layout_weight="1"
                 android:focusable="false"
                 android:gravity="left|center"
                 android:orientation="horizontal" >
 
                 <LinearLayout
-                    android:id="@+id/user_item_layout_gender"
+                    android:id="@+id/user_item_layout_gender1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dip"
@@ -120,26 +113,53 @@
                         android:textSize="10sp" />
                 </LinearLayout>
 
-                <TextView
-                        android:id="@+id/user_item_htv_time"
-                        android:layout_width="0dip"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/font_value"
-                        android:textSize="12sp" />
+               
               
             </LinearLayout>
 
-            <TextView
+           
+        </LinearLayout>
+        
+          <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            
+            android:layout_toRightOf="@+id/user_item_layout_avatar"
+            android:gravity="center_vertical"
+            android:orientation="vertical" >
+             <TextView
+                    android:id="@+id/user_item_htv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentTop="true"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="17sp" />
+                 <TextView
+                        android:id="@+id/user_item_htv_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                       android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:textColor="@color/font_value"
+                        android:textSize="12sp" />
+         <TextView
                 android:id="@+id/user_item_htv_lastmsg"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+               android:layout_below="@+id/user_item_htv_name"
+               android:layout_alignLeft="@+id/user_item_htv_name"
+               android:layout_toLeftOf="@+id/user_item_htv_time"
                 android:ellipsize="end"
-                android:singleLine="true"
+                android:layout_marginRight="10dip"
+                android:maxLines="2"
                 android:textColor="@color/font_value"
                 android:textSize="13sp" />
-        </LinearLayout>
+            </RelativeLayout>
+        
     </RelativeLayout>
 
     <View

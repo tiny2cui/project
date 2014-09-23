@@ -31,7 +31,7 @@ public class FriendAdapter extends ArrayListAdapter<People> {
 			holder.mHtvName = (TextView) convertView
 					.findViewById(R.id.user_item_htv_name);
 			holder.mLayoutGender = (LinearLayout) convertView
-					.findViewById(R.id.user_item_layout_gender);
+					.findViewById(R.id.user_item_layout_gender1);
 			holder.mIvGender = (ImageView) convertView
 					.findViewById(R.id.user_item_iv_gender);
 			holder.mHtvAge = (TextView) convertView

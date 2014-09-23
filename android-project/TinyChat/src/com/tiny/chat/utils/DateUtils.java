@@ -53,6 +53,10 @@ public class DateUtils {
     public static String getNowtime() {
         return new SimpleDateFormat(FORMATTIMESTR).format(new Date());
     }
+    
+    public static String getSimpleTime(){
+    	return new SimpleDateFormat("MM月dd日 HH:mm").format(new Date());
+    }
 
     /**
      * 格式化输出指定时间点与现在的差

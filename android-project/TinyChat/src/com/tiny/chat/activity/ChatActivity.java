@@ -116,6 +116,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
 //            mDBOperate = null;
 //        }
         mRecordThread = null;
+        Boolean b;
         super.finish();
     }
 
@@ -495,6 +496,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
                                     MyLog.i(TAG, "pic--->"+path);
                                     //sendMessage(path, CONTENT_TYPE.IMAGE);
                                     sendMessage(path, FrameType.INFO_FILE);
+                                    loadMessage();
                                     //refreshAdapter();
                                 }
                                 
@@ -512,6 +514,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
 //                                ImageUtils.SD_IMAGE_PATH, null);
 //                        ImageUtils.fliterPhoto(this, this, mCameraImagePath);
                     	 sendMessage(mCameraImagePath, FrameType.INFO_FILE);
+                    	 loadMessage();
                     }
                 }
                 // mCameraImagePath = null;
@@ -645,7 +648,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
             	System.arraycopy(idBytes, 0, data, 0, idBytes.length);
             	System.arraycopy(textData, 0, data, idBytes.length, textData.length);
             	packet = new FramePacket(deviceId, mDisplayId, type, data);
-            	message=new SMSMessage(packet, 0, DateUtils.getNowtime());
+            	message=new SMSMessage(packet, 0, DateUtils.getSimpleTime());
             	DBOperate.getInstance(this).saveMessage(message);
             	UDPSocketService.getInstance().postMessage(packet.getFramePacket(), packet.getFramePacket().length);
                 break;
@@ -656,7 +659,7 @@ public class ChatActivity extends BaseMessageActivity implements OnActiveChatAct
             	System.arraycopy(idBytes, 0, data, 0, idBytes.length);
             	System.arraycopy(textData, 0, data, idBytes.length, textData.length);
             	packet = new FramePacket(deviceId, mDisplayId, type, data);
-            	message=new SMSMessage(packet, 0, DateUtils.getNowtime());
+            	message=new SMSMessage(packet, 0, DateUtils.getSimpleTime());
             	DBOperate.getInstance(this).saveMessage(message);
             	FileSendDispose.getInstance().postFilePath(content, deviceId, mDisplayId);
             	break;

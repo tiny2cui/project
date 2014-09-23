@@ -5,7 +5,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import com.tiny.chat.BaseApplication;
+import com.tiny.chat.db.DBOperate;
 import com.tiny.chat.domain.FramePacket;
+import com.tiny.chat.domain.SMSMessage;
+import com.tiny.chat.utils.ChatMessage;
+import com.tiny.chat.utils.DateUtils;
 import com.tiny.chat.utils.FileUtils;
 import com.tiny.chat.utils.MyLog;
 import com.tiny.chat.utils.TypeConvert;
@@ -17,13 +23,14 @@ public class FileReceiveDispose {
 	private static String receiveFileName;
 	private static FileOutputStream outputStream;
     private static File file;
+    private static SMSMessage message;
 	// private static int SIZE=1024;
 	// private byte[] buffer=new byte[SIZE];
 	public FileReceiveDispose() {
 
 	}
 
-	public static void saveFile(FramePacket framePacket) {
+	public static void saveFile(FramePacket framePacket,DBOperate dbOperate) {
 		int serial = framePacket.getFrameSerial();
 		byte[] data = framePacket.getFramePacket();
 		byte[] idBytes = new byte[4];
@@ -37,9 +44,9 @@ public class FileReceiveDispose {
 			if (data.length > 4) {
 
 				receiveFileName = new String(data, 15, data.length-16);
-				String dir = FileUtils.getSDPath() + "/tinyChat/"+ framePacket.getSourceID();
+				String dir = BaseApplication.THUMBNAIL_PATH+ framePacket.getSourceID();
 				FileUtils.createDirFile(dir);
-				String receiveFilePath = dir + "/" + receiveFileName;
+				String receiveFilePath = dir + File.separator + receiveFileName;
 				file = FileUtils.createNewFile(receiveFilePath);
 				if(!file.exists()){
 					return;
@@ -49,6 +56,12 @@ public class FileReceiveDispose {
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
+				
+				//存储进数据库
+				message = new SMSMessage(framePacket, 0, DateUtils.getSimpleTime());
+				message = dbOperate.saveMessage(message);
+				
+				
 			}
 		} 
 		
@@ -57,7 +70,9 @@ public class FileReceiveDispose {
 			// 文件发送结束
 			if (outputStream != null) {
 				try {
-					
+					ChatMessage chatMessage = new ChatMessage(ChatMessage.MESSAGE_TEXT_DATA,
+							message);
+					BaseApplication.getInstance().handleMessage(chatMessage);
 					outputStream.close();
 					outputStream = null;
 				} catch (IOException e) {

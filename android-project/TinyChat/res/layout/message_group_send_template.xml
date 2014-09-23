@@ -7,8 +7,17 @@
 	android:orientation="vertical"
 	android:paddingBottom="4dip"
 	android:paddingTop="4dip" >
-
+	<!--  
 	<include layout="@layout/message_timestamp" />
+	-->
+	 <TextView
+            android:id="@+id/message_timestamp_htv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+             android:layout_marginRight="15dp"
+            android:textColor="@color/font_value"
+            android:textSize="12.0sp" />
 
 	<LinearLayout
 		android:id="@+id/right_message_layout_contentcontainer"
@@ -72,6 +81,7 @@
 			android:layout_width="40dip"
 			android:layout_height="40dip"
 			android:layout_marginLeft="4dip"
+			android:visibility="gone"
 			android:scaleType="fitXY" />
 	</LinearLayout>
 

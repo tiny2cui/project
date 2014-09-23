@@ -43,10 +43,10 @@ public class FrameType {
 	public static final short LAN_PERSONAL_INFORMATION			    = 99;		// 自身资料
 	public static final short LAN_FRIEND_INFORMATION			    = 100;		// 友邻资料
 	public static final short LAN_PERSONAL_INFORMATION_REQUEST			= 101;		// 获取个人资料请求
-	public static final short LAN_FRIEND_LIST_REQUEST			        = 103;		// 获取友邻列表请求
+	public static final short LAN_FRIEND_LIST_REQUEST			= 103;		// 获取友邻列表请求
 	public static final short LAN_FRIEND_INFORMATION_REQUEST			= 105;		// 获取友邻资料
-	public static final short LAN_POSITION_REQUEST			            = 107;		// 客户端查询自身位置信息
-	public static final short LAN_ENVIROMENT_REQUEST			        = 109;		// 客户端查询自身环境信息
+	public static final short LAN_POSITION_REQUEST			= 107;		// 客户端查询自身位置信息
+	public static final short LAN_ENVIROMENT_REQUEST			= 109;		// 客户端查询自身环境信息
 
 	
 	//语音控制指令

@@ -5,6 +5,8 @@ import java.io.File;
 
 import com.tiny.chat.BaseApplication;
 import com.tiny.chat.R;
+import com.tiny.chat.activity.ChatActivity;
+import com.tiny.chat.activity.ImageBrowserActivity;
 import com.tiny.chat.domain.Message;
 import com.tiny.chat.domain.SMSMessage;
 import com.tiny.chat.file.FileState;
@@ -377,12 +379,28 @@ public class ChatAdapter extends ArrayListAdapter<SMSMessage> {
 //                    break;
 
                 case (int)FrameType.INFO_FILE:
-                    Intent fileIntent = new Intent();
-                    fileIntent.setType("*/*");
-                    fileIntent.setData(Uri.parse("file://"
-                            + FileUtils.getPathByFullPath(messageType.getContent())));
-                    mContext.startActivity(fileIntent);
-                    break;
+//                    Intent fileIntent = new Intent();
+//                    fileIntent.setType("*/*");
+//                    fileIntent.setData(Uri.parse("file://"
+//                            + FileUtils.getPathByFullPath(messageType.getContent())));
+//                    mContext.startActivity(fileIntent);
+//                    break;
+                	String imagePath;
+                	if(SessionUtils.isItself(String.valueOf(messageType.getSourceID()))){
+                		//本地图片
+                		imagePath = messageType.getContent();
+                	}else{
+                		imagePath = BaseApplication.THUMBNAIL_PATH + File.separator + messageType.getSourceID()
+                                + File.separator + FileUtils.getNameByPath(messageType.getContent());
+                	}
+                  Intent imgIntent = new Intent(mContext, ImageBrowserActivity.class);
+                  imgIntent.putExtra(ImageBrowserActivity.IMAGE_TYPE,
+                          ImageBrowserActivity.TYPE_PHOTO);
+                  imgIntent.putExtra(ImageBrowserActivity.PATH,imagePath);
+                  mContext.startActivity(imgIntent);
+                  ((ChatActivity) mContext).overridePendingTransition(R.anim.zoom_enter, 0);
+
+                  break;
 
                 default:
                     break;
@@ -416,7 +434,7 @@ public class ChatAdapter extends ArrayListAdapter<SMSMessage> {
 //                    break;
 
                 case (int)FrameType.INFO_FILE:
-                    type = 7;
+                    type = TYPE_RIGHT_IMAGE;
                     break;
             }
 
@@ -436,7 +454,7 @@ public class ChatAdapter extends ArrayListAdapter<SMSMessage> {
 //                    break;
 
                 case (int)FrameType.INFO_FILE:
-                    type = 3;
+                    type = TYPE_LEFT_IMAGE;
                     break;
             }
         }
@@ -483,8 +501,16 @@ public class ChatAdapter extends ArrayListAdapter<SMSMessage> {
     }
 
     private Bitmap getImageBitmap(SMSMessage msg) {
-        String imagePath = BaseApplication.THUMBNAIL_PATH + File.separator + msg.getSourceID()
-                + File.separator + FileUtils.getNameByPath(msg.getContent());
+    	 String imagePath;
+    	 imagePath = msg.getContent();
+    	if(SessionUtils.isItself(String.valueOf(msg.getSourceID()))){
+    		//本地图片
+    		imagePath = msg.getContent();
+    	}else{
+    		imagePath = BaseApplication.THUMBNAIL_PATH + File.separator + msg.getSourceID()
+                    + File.separator + FileUtils.getNameByPath(msg.getContent());
+    	}
+        
         Bitmap bitmap = ImageUtils.getBitmapFromPath(imagePath);
         
         Log.i(TAG, "聊天图片：" + imagePath);

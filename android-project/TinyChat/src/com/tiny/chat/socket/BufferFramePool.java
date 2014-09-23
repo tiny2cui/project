@@ -92,7 +92,7 @@ public class BufferFramePool extends Thread {
 			if (mDeviceId != framePacket.getDestineID()) {
 				return;
 			}
-			message = new SMSMessage(framePacket, 0, DateUtils.getNowtime());
+			message = new SMSMessage(framePacket, 0, DateUtils.getSimpleTime());
 			chatMessage = new ChatMessage(ChatMessage.MESSAGE_TEXT_DATA,
 					message);
 			message = dbOperate.saveMessage(message);
@@ -126,7 +126,7 @@ public class BufferFramePool extends Thread {
 			if (mDeviceId != framePacket.getDestineID()) {
 				return;
 			}
-			FileReceiveDispose.saveFile(framePacket);
+			FileReceiveDispose.saveFile(framePacket,dbOperate);
 			break;
 
 		case FrameType.LAN_LOGIN_RESPONSE:
@@ -145,7 +145,8 @@ public class BufferFramePool extends Thread {
 		case FrameType.LAN_LOGIN_BROADCAST: // 上線通知
 			People loginPeople = new People(framePacket.getSourceID());
 			application.addOnlineUsers(framePacket.getSourceID(), loginPeople);
-			chatMessage = new ChatMessage(ChatMessage.MESSAGE_FRIEND_LOGIN_DATA, loginPeople);
+			chatMessage = new ChatMessage(
+					ChatMessage.MESSAGE_FRIEND_LOGIN_DATA, loginPeople);
 			application.handleMessage(chatMessage);
 			// TODO 发送获取友邻资料、位置、环境等信息
 			FramePacket friendInfoPacket = new FramePacket(application.getDeviceID(), framePacket.getSourceID(),
